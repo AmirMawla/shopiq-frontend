@@ -1,0 +1,45 @@
+<div class="dashboard-sidebar">
+
+  <!-- Logo -->
+  <div class="sb-logo">
+    <span class="sb-logo-mark" aria-hidden="true">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <i class="fa-solid fa-bolt sb-mark-bolt"></i>
+    </span>
+    <span class="sb-brand">SHOP<span>IQ</span></span>
+  </div>
+
+  <!-- Nav Sections -->
+  <nav style="flex:1; padding: 8px 0; overflow-y: auto;">
+    @for (section of sections; track section.title) {
+      <div class="sb-section-label">{{ section.title }}</div>
+      @for (item of section.items; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.route.split('/').length <= 2 }"
+          class="sb-nav-item"
+        >
+          <span class="sb-dot"></span>
+          {{ item.label }}
+          @if (item.badge) {
+            <span class="sb-badge">{{ item.badge }}</span>
+          }
+        </a>
+      }
+    }
+  </nav>
+
+  <!-- User info at bottom (placeholder) -->
+  <div class="sb-bottom">
+    <div class="sb-avatar">U</div>
+    <div style="overflow: hidden;">
+      <div style="font-size:13px; color: var(--text-dark); font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+        User
+      </div>
+      <div style="font-size:11px; color:#3A3A5C;">
+        Member
+      </div>
+    </div>
+  </div>
+</div>

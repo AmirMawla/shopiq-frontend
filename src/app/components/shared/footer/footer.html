@@ -1,0 +1,108 @@
+<footer class="footer-siq">
+  <div class="footer-container">
+
+    <!-- Top Row -->
+    <div class="footer-top">
+
+      <!-- Brand -->
+      <div class="footer-brand">
+        <div class="footer-logo" aria-label="ShopIQ logo">
+          <span class="siq-logo-mark">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <i class="fa-solid fa-bolt siq-mark-bolt"></i>
+          </span>
+          <span class="siq-logo-word">SHOP<span>IQ</span></span>
+        </div>
+        <p class="footer-tagline">Smart · Seamless · Swift</p>
+        <p class="footer-desc">
+          ShopIQ is your intelligent e-commerce platform — discover, shop,
+          and sell with confidence.
+        </p>
+        <div class="footer-socials">
+          <a href="#" aria-label="Facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="#" aria-label="Twitter">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Links: Shop -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Shop</h4>
+        <ul>
+          <li><a routerLink="/shop">All Products</a></li>
+          <li><a routerLink="/shop" [queryParams]="{ category: 'electronics' }">Electronics</a></li>
+          <li><a routerLink="/shop" [queryParams]="{ category: 'fashion' }">Fashion</a></li>
+          <li><a routerLink="/shop" [queryParams]="{ category: 'home' }">Home & Living</a></li>
+          <li><a routerLink="/shop" [queryParams]="{ deals: 'true' }">Today's Deals</a></li>
+        </ul>
+      </div>
+
+      <!-- Links: Account -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Account</h4>
+        <ul>
+          <li><a routerLink="/auth/login">Login</a></li>
+          <li><a routerLink="/auth/register">Register</a></li>
+          <li><a routerLink="/account/orders">My Orders</a></li>
+          <li><a routerLink="/account/wishlist">Wishlist</a></li>
+          <li><a routerLink="/account/profile">Profile</a></li>
+        </ul>
+      </div>
+
+      <!-- Links: Sellers -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Sellers</h4>
+        <ul>
+          <li><a routerLink="/auth/register">Become a Seller</a></li>
+          <li><a routerLink="/seller">Seller Dashboard</a></li>
+          <li><a routerLink="/seller/products">My Products</a></li>
+          <li><a routerLink="/seller/earnings">Earnings</a></li>
+        </ul>
+      </div>
+
+      <!-- Links: Support -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Support</h4>
+        <ul>
+          <li><a routerLink="/">Help Center</a></li>
+          <li><a routerLink="/">Privacy Policy</a></li>
+          <li><a routerLink="/">Terms of Service</a></li>
+          <li><a routerLink="/">Return Policy</a></li>
+          <li><a routerLink="/">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="footer-divider"></div>
+
+    <!-- Bottom Row -->
+    <div class="footer-bottom">
+      <span class="footer-copy">
+        &copy; {{ currentYear }} ShopIQ. All rights reserved.
+      </span>
+      <div class="footer-payments">
+        <img src="assets/images/visa.svg" alt="Visa" onerror="this.style.display='none'" />
+        <img
+          src="assets/images/mastercard.svg"
+          alt="Mastercard"
+          onerror="this.style.display='none'"
+        />
+        <img src="assets/images/paypal.svg" alt="PayPal" onerror="this.style.display='none'" />
+        <span class="payment-placeholder">Visa</span>
+        <span class="payment-placeholder">Mastercard</span>
+        <span class="payment-placeholder">PayPal</span>
+        <span class="payment-placeholder">COD</span>
+      </div>
+    </div>
+  </div>
+</footer>

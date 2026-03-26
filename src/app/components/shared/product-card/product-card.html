@@ -1,0 +1,22 @@
+<div class="product-card" role="button" tabindex="0">
+  <img
+    class="product-card-img"
+    [src]="product?.imageUrl || 'assets/images/placeholder-product.jpg'"
+    alt="Product"
+  />
+  <div class="product-card-body">
+    <div class="product-card-category">{{ product?.category || 'Category' }}</div>
+    <div class="product-card-name">{{ product?.name || 'Product Name' }}</div>
+    <div>
+      <span class="product-card-price">
+        ${{ product?.price ?? 0 }}
+      </span>
+      @if (
+        product?.oldPrice != null &&
+        (product?.oldPrice ?? 0) > (product?.price ?? 0)
+      ) {
+        <span class="product-card-old-price">${{ product?.oldPrice }}</span>
+      }
+    </div>
+  </div>
+</div>

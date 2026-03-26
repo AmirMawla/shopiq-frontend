@@ -1,0 +1,26 @@
+<div class="dashboard-shell">
+  <app-sidebar [sections]="adminSections" />
+  <div class="dashboard-main">
+    <div class="dashboard-topbar">
+      <span class="topbar-breadcrumb">ShopIQ / <strong>{{ pageTitle }}</strong></span>
+      <div class="topbar-search">
+        <i class="fa-solid fa-magnifying-glass" style="color: var(--muted); font-size:13px;"></i>
+        <input type="text" placeholder="Search..." />
+      </div>
+      <div style="margin-left: auto; display:flex; gap:8px; align-items:center;">
+        <button class="topbar-icon-btn" type="button" aria-label="Notifications">
+          <i class="fa-regular fa-bell"></i>
+        </button>
+        <button class="topbar-icon-btn" type="button" aria-label="Settings">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+        <a routerLink="/admin/products/new" class="btn-siq">
+          <i class="fa-solid fa-plus"></i> Add Product
+        </a>
+      </div>
+    </div>
+    <div class="dashboard-content">
+      <router-outlet />
+    </div>
+  </div>
+</div>
