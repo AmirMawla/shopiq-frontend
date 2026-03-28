@@ -37,7 +37,7 @@
      @for(p of products$ | async; track p._id){
       <div class="col">
         <div class="product-card" (click)="navigateToDetails(p._id!)">
-          <img [src]="p.image" class="product-card-img" alt="{{ p.name }}">
+          <img [src]="p.imageUrl" class="product-card-img" alt="{{ p.name }}">
           <div class="product-card-body">
             <p class="product-card-category">{{ p.categoryId }}</p>
             <p class="product-card-name">{{ p.name }}</p>

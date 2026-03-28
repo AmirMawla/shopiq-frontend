@@ -10,14 +10,15 @@
 
     <div class="col-md-5">
       <div class="card-siq p-0" style="overflow: hidden;">
-        <img [src]="product.image" class="w-100"
+        <img [src]="product.imageUrl" class="w-100"
           style="aspect-ratio: 4/3; object-fit: cover;">
       </div>
     </div>
 
     <div class="col-md-7">
       <div class="card-siq h-100">
-        <p class="product-card-category">{{ product.categoryId }}</p>
+        <!-- <p class="product-card-category">{{ product.categoryId?.name }}</p> -->
+       <p class="product-card-category">{{ $any(product.categoryId)?.name }}</p>
         <h2 class="page-title">{{ product.name }}</h2>
         <div class="divider"></div>
         <p class="text-muted-siq mb-4">{{ product.description }}</p>

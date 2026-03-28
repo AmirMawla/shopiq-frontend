@@ -1,9 +1,6 @@
 import { ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-// import { StaticProducts } from '../../services/static-products';
-// import { IProduct } from '../../models/iproduct';
 import { Observable } from 'rxjs';
-// import { ProductsApi } from '../../services/products-api';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import{Product} from '../../../../models/product';
 import { Category } from '../../../../models/category';
