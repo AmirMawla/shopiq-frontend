@@ -1,0 +1,66 @@
+<div class="container-fluid px-4 py-4">
+
+  <div class="section-header">
+    <h1 class="page-title">Products</h1>
+  </div>
+
+  <div class="card-siq mb-4">
+    <div class="row g-3">
+      <div class="col-md-5">
+        <label class="form-label-siq">Search</label>
+        <div class="topbar-search w-100">
+          <!-- <span>🔍</span> -->
+          <input type="text" placeholder="Search products..."
+            [(ngModel)]="searchQuery" (input)="searchProducts()"/>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label-siq">Category</label>
+        <select class="form-input-siq" [(ngModel)]="selectedCategoryId"
+          (change)="filterByCategory(selectedCategoryId)">
+          <option value="">All Categories</option>
+          @for(cat of categories$ | async; track cat._id){
+            <option [value]="cat._id">{{ cat.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label-siq">Max Price</label>
+        <input type="number" class="form-input-siq" placeholder="Max price"
+          [(ngModel)]="maxPrice" (input)="filterByPrice()"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-4 g-3">
+    <!-- @for(p of filteredProducts; track p._id){ -->
+     @for(p of products$ | async; track p._id){
+      <div class="col">
+        <div class="product-card" (click)="navigateToDetails(p._id!)">
+          <img [src]="p.image" class="product-card-img" alt="{{ p.name }}">
+          <div class="product-card-body">
+            <p class="product-card-category">{{ p.categoryId }}</p>
+            <p class="product-card-name">{{ p.name }}</p>
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="product-card-price">${{ p.price }}</span>
+              @if(p.stock == 0){
+                <span class="pill pill-cancelled">Out of Stock</span>
+              } @else if(p.stock <= 5){
+                <span class="pill pill-processing">Almost Out</span>
+              } @else {
+                <span class="pill pill-active">In Stock</span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    @empty {
+      <div class="col-12 text-center py-5">
+        <p class="text-muted-siq">No products found </p>
+      </div>
+    }
+  </div>
+
+</div>
