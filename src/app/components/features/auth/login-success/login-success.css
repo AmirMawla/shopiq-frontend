@@ -1,0 +1,53 @@
+.success-card {
+    text-align: center;
+    border-top: 4px solid var(--success);
+}
+
+.avatar-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+
+.user-avatar-lg {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-light);
+    background: white;
+}
+
+.placeholder-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: var(--muted);
+    background: var(--page-bg);
+}
+
+.check-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: var(--success);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.success-flow h3 {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.action-area {
+    margin-top: 32px;
+}

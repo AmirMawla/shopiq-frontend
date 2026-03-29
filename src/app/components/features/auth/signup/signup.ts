@@ -1,18 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../../services/auth';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './signup.html',
-  styleUrls: ['../auth-shared.css'],
+  styleUrls: ['../auth-shared.css', './signup.css'],
 })
 export class SignupComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   signupForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -23,12 +24,10 @@ export class SignupComponent {
   onSubmit() {
     if (this.signupForm.valid) {
       this.authService.signup(this.signupForm.value).subscribe({
-        next: (res) => {
-          console.log('✅ Signup Successful', res);
+        next: () => {
+          this.router.navigate(['/auth/login']);
         },
-        error: (err) => {
-          console.error('❌ Signup Failed', err);
-        },
+        error: (err) => console.error('Signup error', err),
       });
     }
   }

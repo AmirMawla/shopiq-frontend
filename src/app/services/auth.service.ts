@@ -1,5 +1,4 @@
-// src/app/services/auth.service.ts
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
@@ -10,16 +9,19 @@ export class AuthService {
   private router = inject(Router);
   private baseUrl = 'http://localhost:1234/auth';
 
+  // State management
+  private userState = signal<any>(JSON.parse(localStorage.getItem('user') || 'null'));
+  currentUser = computed(() => this.userState());
+  isLoggedIn = computed(() => !!this.userState());
+
   signup(data: any) {
-    return this.http
-      .post(`${this.baseUrl}/signup`, data)
-      .pipe(tap((res: any) => this.handleAuthSuccess(res)));
+    return this.http.post(`${this.baseUrl}/signup`, data);
   }
 
   login(data: any) {
-    return this.http
-      .post(`${this.baseUrl}/login`, data)
-      .pipe(tap((res: any) => this.handleAuthSuccess(res)));
+    return this.http.post(`${this.baseUrl}/login`, data).pipe(
+      tap((res: any) => this.handleAuthSuccess(res))
+    );
   }
 
   googleLogin() {
@@ -27,15 +29,16 @@ export class AuthService {
   }
 
   handleAuthSuccess(res: { token: string; user: any }) {
-    if (res.token) {
+    if (res.token && res.user) {
       localStorage.setItem('token', res.token);
       localStorage.setItem('user', JSON.stringify(res.user));
-      console.log('✅ LocalStorage Updated');
+      this.userState.set(res.user);
     }
   }
 
   logout() {
     localStorage.clear();
+    this.userState.set(null);
     this.router.navigate(['/auth/login']);
   }
 }

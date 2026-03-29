@@ -1,53 +1,44 @@
-// src/app/services/auth.service.ts
-import { Injectable, inject, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { Component, HostListener, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
-@Injectable({ providedIn: 'root' })
-export class AuthService {
-  private http = inject(HttpClient);
-  private router = inject(Router);
-  private baseUrl = 'http://localhost:1234/auth';
+@Component({
+  selector: 'app-navbar',
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterLinkActive],
+  templateUrl: './navbar.html',
+  styleUrl: './navbar.css',
+})
+export class NavbarComponent {
+  authService = inject(AuthService);
 
-  // 1. Initialize Signal from LocalStorage so state persists on refresh
-  currentUser = signal<any>(JSON.parse(localStorage.getItem('user') || 'null'));
-  
-  // 2. Computed value for easy template checks
-  isLoggedIn = computed(() => !!this.currentUser());
+  menuOpen = signal(false);
+  scrolled = signal(false);
+  userMenuOpen = signal(false);
 
-  signup(data: any) {
-    return this.http.post(`${this.baseUrl}/signup`, data).pipe(
-      tap((res: any) => this.handleAuthSuccess(res))
-    );
+  cartCount = 0;
+
+  @HostListener('window:scroll')
+  onScroll() {
+    this.scrolled.set(window.scrollY > 10);
   }
 
-  login(data: any) {
-    return this.http.post(`${this.baseUrl}/login`, data).pipe(
-      tap((res: any) => this.handleAuthSuccess(res))
-    );
+  toggleMenu() {
+    this.menuOpen.set(!this.menuOpen());
   }
 
-  googleLogin() {
-    window.location.href = `${this.baseUrl}/google`;
+  toggleUserMenu() {
+    this.userMenuOpen.set(!this.userMenuOpen());
   }
 
-  // 3. Centralized method to save data and update UI state
-  handleAuthSuccess(res: { token: string; user: any }) {
-    if (res.token) {
-      localStorage.setItem('token', res.token);
-      localStorage.setItem('user', JSON.stringify(res.user));
-      
-      // Update Signal: This immediately updates the Navbar!
-      this.currentUser.set(res.user);
-    }
+  closeMenu() {
+    this.menuOpen.set(false);
+    this.userMenuOpen.set(false);
   }
 
-  // 4. Logout Logic
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    this.currentUser.set(null); // Reset Signal
-    this.router.navigate(['/auth/login']);
+  handleLogout() {
+    this.authService.logout();
+    this.closeMenu();
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../../services/auth';
+import { AuthService } from '../../../../services/auth.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './login-success.html',
-  styleUrls: ['../auth-shared.css'],
+  styleUrls: ['../auth-shared.css', './login-success.css'],
 })
 export class LoginSuccessComponent implements OnInit {
   private route = inject(ActivatedRoute);
@@ -27,16 +27,18 @@ export class LoginSuccessComponent implements OnInit {
         const userData = JSON.parse(userString);
         this.userName = userData.name;
         this.userProfilePic = userData.profilePicture?.url;
-
         this.authService.handleAuthSuccess({ token, user: userData });
+
+        // Auto-redirect to home after a brief showing of the success state
+        setTimeout(() => this.navigateToHome(), 2000);
       } catch (error) {
-        console.error('❌ Parsing error', error);
         this.router.navigate(['/auth/login']);
       }
     } else {
       this.router.navigate(['/auth/login']);
     }
   }
+
   navigateToHome() {
     this.router.navigate(['/']);
   }
