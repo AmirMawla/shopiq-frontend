@@ -15,6 +15,12 @@ export class AuthService {
   currentUser = computed(() => this.userState());
   isLoggedIn = computed(() => !!this.userState());
 
+  private getHeaders() {
+    return new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+  }
+
   signup(data: any) {
     return this.http.post(`${this.baseUrl}/signup`, data);
   }
@@ -25,13 +31,24 @@ export class AuthService {
       .pipe(tap((res: any) => this.handleAuthSuccess(res)));
   }
 
-  getMe() {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+  forgotPassword(email: string) {
+    return this.http.post(`${this.baseUrl}/forgot-password`, { email });
+  }
 
-    return this.http.get<any>(`${this.usersUrl}/me`, { headers }).pipe(
+  verifyOtp(email: string, otp: string) {
+    return this.http.post(`${this.baseUrl}/verify-otp`, { email, otp });
+  }
+
+  resetPassword(data: any) {
+    return this.http.post(`${this.baseUrl}/reset-password`, data);
+  }
+
+  changePassword(data: any) {
+    return this.http.patch(`${this.baseUrl}/change-password`, data, { headers: this.getHeaders() });
+  }
+
+  getMe() {
+    return this.http.get<any>(`${this.usersUrl}/me`, { headers: this.getHeaders() }).pipe(
       tap((res: any) => {
         if (res.success && res.data) {
           this.userState.set(res.data);

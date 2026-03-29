@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../services/auth.service';
+import { ChangePasswordComponent } from '../change-password/change-password';
 
 @Component({
   selector: 'app-user-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ChangePasswordComponent],
   templateUrl: './user-details.html',
   styleUrls: ['./user-details.css'],
 })
@@ -14,6 +15,7 @@ export class UserDetailsComponent implements OnInit {
 
   isLoading = signal(true);
   errorMessage = signal<string | null>(null);
+  activeTab = signal<'profile' | 'security'>('profile');
 
   user = this.authService.currentUser;
 
@@ -23,16 +25,11 @@ export class UserDetailsComponent implements OnInit {
 
   fetchUserProfile(): void {
     this.isLoading.set(true);
-    this.errorMessage.set(null);
-
     this.authService.getMe().subscribe({
-      next: () => {
-        this.isLoading.set(false);
-      },
+      next: () => this.isLoading.set(false),
       error: (err) => {
         this.errorMessage.set('Failed to load profile details');
         this.isLoading.set(false);
-        console.error(err);
       },
     });
   }

@@ -8,6 +8,7 @@ import { LoginComponent } from './components/features/auth/login/login';
 import { SignupComponent } from './components/features/auth/signup/signup';
 import { LoginSuccessComponent } from './components/features/auth/login-success/login-success';
 import { UserDetailsComponent } from './components/features/user/user-details/user-details';
+import { ForgotPasswordComponent } from './components/features/auth/forgot-password/forgot-password';
 
 export const routes: Routes = [
   {
@@ -19,19 +20,18 @@ export const routes: Routes = [
       { path: 'products/:id', component: ProductDetails, title: 'Product Details' },
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
       { path: 'products/edit/:id', component: AddProduct, title: 'Edit Product' },
-      { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' }, // Add this line
-      
-    ]
+      { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
+    ],
   },
   {
     path: 'auth',
     component: AuthLayoutComponent,
     children: [
-      // Uncomment when Login and Signup components are created
       { path: 'login', component: LoginComponent, title: 'Login' },
       { path: 'signup', component: SignupComponent, title: 'Signup' },
       { path: 'login-success', component: LoginSuccessComponent, title: 'LoginSuccess' },
-    ]
+      { path: 'forgot-password', component: ForgotPasswordComponent, title: 'Forgot Password' },
+    ],
   },
-  { path: '**', redirectTo: 'LoginSuccess' }
+  { path: '**', redirectTo: 'LoginSuccess' },
 ];
