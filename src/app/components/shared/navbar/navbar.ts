@@ -11,7 +11,7 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './navbar.css',
 })
 export class NavbarComponent {
-  authService = inject(AuthService);
+  public authService = inject(AuthService);
 
   menuOpen = signal(false);
   scrolled = signal(false);

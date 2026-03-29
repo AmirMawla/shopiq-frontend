@@ -15,16 +15,22 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  errorMessage: string | null = null;
+
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
   onSubmit() {
     if (this.loginForm.valid) {
+      this.errorMessage = null;
       this.authService.login(this.loginForm.value).subscribe({
         next: () => this.router.navigate(['/']),
-        error: (err) => console.error('Login error', err),
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'An unexpected error occurred';
+          console.error('Login error', err);
+        },
       });
     }
   }

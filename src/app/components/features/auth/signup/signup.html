@@ -5,6 +5,12 @@
       <p class="text-muted-siq">Join ShopIQ and start shopping today</p>
     </div>
 
+    @if (errorMessage) {
+    <div class="error-message-siq">
+      {{ errorMessage }}
+    </div>
+    }
+
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label class="form-label-siq">Full Name</label>
@@ -19,6 +25,14 @@
       <div class="form-group">
         <label class="form-label-siq">Password</label>
         <input type="password" formControlName="password" class="form-input-siq" placeholder="••••••••">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label-siq">Confirm Password</label>
+        <input type="password" formControlName="confirmPassword" class="form-input-siq" placeholder="••••••••">
+        @if (signupForm.errors?.['passwordMismatch'] && signupForm.get('confirmPassword')?.touched) {
+        <small class="error-text-siq">Passwords do not match</small>
+        }
       </div>
 
       <button type="submit" class="btn-siq w-full" [disabled]="signupForm.invalid">

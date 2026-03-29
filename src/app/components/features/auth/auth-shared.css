@@ -136,3 +136,23 @@
   text-decoration: none;
   font-weight: 600;
 }
+
+/* error  */
+
+.error-message-siq {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  color: var(--danger);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.error-text-siq {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}

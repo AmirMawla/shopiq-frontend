@@ -5,6 +5,12 @@
             <p class="text-muted-siq">Login to manage your ShopIQ account</p>
         </div>
 
+        @if (errorMessage) {
+        <div class="error-message-siq">
+            {{ errorMessage }}
+        </div>
+        }
+
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <label class="form-label-siq">Email Address</label>
