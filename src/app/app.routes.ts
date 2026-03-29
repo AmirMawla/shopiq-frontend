@@ -7,6 +7,7 @@ import { AddProduct } from './components/features/customer/add-product/add-produ
 import { LoginComponent } from './components/features/auth/login/login';
 import { SignupComponent } from './components/features/auth/signup/signup';
 import { LoginSuccessComponent } from './components/features/auth/login-success/login-success';
+import { UserDetailsComponent } from './components/features/user/user-details/user-details';
 
 export const routes: Routes = [
   {
@@ -18,6 +19,7 @@ export const routes: Routes = [
       { path: 'products/:id', component: ProductDetails, title: 'Product Details' },
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
       { path: 'products/edit/:id', component: AddProduct, title: 'Edit Product' },
+      { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' }, // Add this line
       
     ]
   },

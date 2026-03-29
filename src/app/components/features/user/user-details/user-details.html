@@ -1,0 +1,88 @@
+<div class="profile-container">
+    @if (isLoading()) {
+    <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading profile...</p>
+    </div>
+    } @else if (errorMessage()) {
+    <div class="card-siq error-card">
+        <p class="text-danger-siq">{{ errorMessage() }}</p>
+        <button class="btn-siq" (click)="fetchUserProfile()">Retry</button>
+    </div>
+    } @else if (user()) {
+    <div class="profile-grid">
+
+        <div class="card-siq profile-main">
+            <div class="profile-header">
+                <div class="avatar-large">
+                    @if (user().profilePicture?.url) {
+                    <img [src]="user().profilePicture.url" [alt]="user().name">
+                    } @else {
+                    <span>{{ getInitials(user().name) }}</span>
+                    }
+                </div>
+                <div class="header-text">
+                    <h1 class="user-name">{{ user().name }}</h1>
+                    <p class="user-email">{{ user().email }}</p>
+                    <div class="pill-group">
+                        <span class="pill" [ngClass]="user().role === 'admin' ? 'pill-shipped' : 'pill-active'">
+                            {{ user().role | titlecase }}
+                        </span>
+                        @if (user().isActive) {
+                        <span class="pill pill-approved">Active Account</span>
+                        }
+                        @if (user().isRestricted) {
+                        <span class="pill pill-restricted">Restricted</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Auth Provider</span>
+                    <span class="info-value">{{ user().authProvider | titlecase }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Verification</span>
+                    <span class="info-value" [class.text-success-siq]="user().otpVerified">
+                        {{ user().otpVerified ? 'Verified' : 'Unverified' }}
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Member Since</span>
+                    <span class="info-value">{{ user().createdAt | date:'mediumDate' }}</span>
+                </div>
+            </div>
+        </div>
+
+        @if (user().sellerProfile && user().sellerProfile.storeName) {
+        <div class="card-siq seller-card">
+            <div class="section-header">
+                <h3 class="section-title">Seller Profile</h3>
+                <span class="pill" [ngClass]="user().sellerProfile.isApproved ? 'pill-approved' : 'pill-pending'">
+                    {{ user().sellerProfile.isApproved ? 'Approved Store' : 'Pending Approval' }}
+                </span>
+            </div>
+            <div class="store-info">
+                <div class="stat-card purple">
+                    <span class="stat-label">Store Name</span>
+                    <div class="stat-num">{{ user().sellerProfile.storeName }}</div>
+                </div>
+                <div class="stat-card green">
+                    <span class="stat-label">Total Earnings</span>
+                    <div class="stat-num">${{ user().sellerProfile.earnings }}</div>
+                </div>
+            </div>
+            <div class="bio-section">
+                <span class="info-label">Store Bio</span>
+                <p class="bio-text">{{ user().sellerProfile.bio || 'No bio provided' }}</p>
+            </div>
+        </div>
+        }
+
+    </div>
+    }
+</div>
