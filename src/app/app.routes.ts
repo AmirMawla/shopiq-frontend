@@ -4,6 +4,9 @@ import { AuthLayoutComponent } from './components/layouts/auth-layout/auth-layou
 import { ProductList } from './components/features/customer/product-list/product-list';
 import { ProductDetails } from './components/features/customer/product-details/product-details';
 import { AddProduct } from './components/features/customer/add-product/add-product';
+import { LoginComponent } from './components/features/auth/login/login';
+import { SignupComponent } from './components/features/auth/signup/signup';
+import { LoginSuccessComponent } from './components/features/auth/login-success/login-success';
 
 export const routes: Routes = [
   {
@@ -23,9 +26,10 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     children: [
       // Uncomment when Login and Signup components are created
-      // { path: 'login', component: Login, title: 'Login' },
-      // { path: 'signup', component: Signup, title: 'Signup' },
+      { path: 'login', component: LoginComponent, title: 'Login' },
+      { path: 'signup', component: SignupComponent, title: 'Signup' },
+      { path: 'login-success', component: LoginSuccessComponent, title: 'LoginSuccess' },
     ]
   },
-  { path: '**', redirectTo: 'products' }
+  { path: '**', redirectTo: 'LoginSuccess' }
 ];

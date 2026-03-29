@@ -1,0 +1,24 @@
+<div class="auth-container">
+  <div class="card-siq auth-card success-flow">
+
+    <div class="success-header">
+      <div class="avatar-wrapper" *ngIf="userProfilePic">
+        <img [src]="userProfilePic" alt="Profile" class="user-avatar-lg">
+        <div class="check-badge">✓</div>
+      </div>
+
+      <h2 class="page-title">Login Successful!</h2>
+      <p class="text-muted-siq">Welcome back, <strong>{{ userName }}</strong>.</p>
+    </div>
+
+    <div class="action-area">
+      <button (click)="navigateToHome()" class="btn-siq w-full">
+        Continue to Home
+      </button>
+    </div>
+
+    <p class="auth-footer text-muted-siq">
+      You are now signed in securely.
+    </p>
+  </div>
+</div>

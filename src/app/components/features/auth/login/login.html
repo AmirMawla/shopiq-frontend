@@ -1,0 +1,35 @@
+<div class="auth-container">
+    <div class="card-siq auth-card">
+        <div class="auth-header">
+            <h2 class="page-title">Welcome Back</h2>
+            <p class="text-muted-siq">Login to manage your ShopIQ account</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label class="form-label-siq">Email Address</label>
+                <input type="email" formControlName="email" class="form-input-siq" placeholder="name@example.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label-siq">Password</label>
+                <input type="password" formControlName="password" class="form-input-siq" placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn-siq w-full" [disabled]="loginForm.invalid">
+                Sign In
+            </button>
+        </form>
+
+        <div class="divider-text"><span>OR</span></div>
+
+        <button type="button" (click)="continueWithGoogle()" class="btn-outline-siq w-full google-btn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+            Continue with Google
+        </button>
+
+        <p class="auth-footer text-muted-siq">
+            Don't have an account? <a routerLink="/auth/signup" class="text-primary-siq">Create one</a>
+        </p>
+    </div>
+</div>
