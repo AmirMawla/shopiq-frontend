@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product';
 import { environment } from '../../environments/environment';
-
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,23 +11,36 @@ export class ProductService {
   private httpClient = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/products`; 
 
-  getAllProducts(): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(this.apiUrl);
-  }
+getAllProducts(): Observable<Product[]> {
+  return this.httpClient.get<any>(this.apiUrl).pipe(
+    map(res => res.data) 
+  );
+}
 
-  getProductById(id: string): Observable<Product> {
-    return this.httpClient.get<Product>(`${this.apiUrl}/${id}`);
-  }
+getProductById(id: string): Observable<Product> {
+  return this.httpClient.get<any>(`${this.apiUrl}/${id}`).pipe(
+    map(res => res.data)
+  );
+}
 
-  getProductsByCatId(catId: string): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`${this.apiUrl}?categoryId=${catId}`);
-  }
+getProductsByCatId(catId: string): Observable<Product[]> {
+  return this.httpClient.get<any>(`${this.apiUrl}?categoryId=${catId}`).pipe(
+    map(res => res.data)
+  );
+}
 
-  searchProducts(name: string): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`${this.apiUrl}?search=${name}`);
-  }
+searchProducts(name: string): Observable<Product[]> {
+  return this.httpClient.get<any>(`${this.apiUrl}?search=${name}`).pipe(
+    map(res => res.data)
+  );
+}
 
-  addNewProduct(product: Product): Observable<Product> {
+getProductsByPrice(maxPrice: number): Observable<Product[]> {
+  return this.httpClient.get<any>(`${this.apiUrl}?maxPrice=${maxPrice}`).pipe(
+    map(res => res.data)
+  );
+}
+addNewProduct(product: Product): Observable<Product> {
     return this.httpClient.post<Product>(this.apiUrl, product);
   }
 
@@ -37,9 +50,6 @@ export class ProductService {
 
   deleteProduct(id: string): Observable<any> {
     return this.httpClient.delete(`${this.apiUrl}/${id}`);
-  }
-  getProductsByPrice(maxPrice: number): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`${this.apiUrl}?maxPrice=${maxPrice}`);
   }
 }
 

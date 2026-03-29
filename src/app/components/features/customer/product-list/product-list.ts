@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import{Product} from '../../../../models/product';
+import { Product } from '../../../../models/product';
 import { Category } from '../../../../models/category';
 import { ProductService } from '../../../../services/product';
-import { CategoriesS} from '../../../../services/category';
-import { Observable } from 'rxjs';
+import { CategoriesS } from '../../../../services/category';
+import { Observable, of } from 'rxjs'; 
 import { AsyncPipe, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -20,43 +20,42 @@ export class ProductList implements OnInit {
   private categoryService = inject(CategoriesS);
   private router = inject(Router);
 
+  products: Product[] = []; 
   products$!: Observable<Product[]>;
   categories$!: Observable<Category[]>;
 
   selectedCategoryId: string = '';
   searchQuery: string = '';
-  maxPrice: number = 0
+  maxPrice: number = 0;
 
   ngOnInit(): void {
-    this.products$ = this.productService.getAllProducts();
+    this.productService.getAllProducts().subscribe({
+      next: (data) => {
+        this.products = data;
+        this.applyFilters();
+      },
+      error: (err) => console.log(err)
+    });
     this.categories$ = this.categoryService.getAllCategories();
   }
 
-  filterByCategory(catId: string): void {
-    if (!catId) {
-      this.products$ = this.productService.getAllProducts();
-    } else {
-      this.products$ = this.productService.getProductsByCatId(catId);
-    }
-  }
+  applyFilters(): void {
+    this.products$ = of(this.products.filter(p => {
+      const matchName = !this.searchQuery ||
+        p.name.toLowerCase().includes(this.searchQuery.toLowerCase());
+      
+      const matchCat = !this.selectedCategoryId ||
+        (p.categoryId as any)?._id === this.selectedCategoryId;
+      
+      const matchPrice = !this.maxPrice || 
+        this.maxPrice <= 0 || 
+        p.price <= this.maxPrice;
 
-  searchProducts(): void {
-    if (!this.searchQuery) {
-      this.products$ = this.productService.getAllProducts();
-    } else {
-      this.products$ = this.productService.searchProducts(this.searchQuery);
-    }
+      return matchName && matchCat && matchPrice;
+    }));
   }
 
   navigateToDetails(id: string): void {
     this.router.navigateByUrl(`/products/${id}`);
   }
-  filterByPrice(): void {
-    if (!this.maxPrice || this.maxPrice <= 0) {
-      this.products$ = this.productService.getAllProducts();
-    } else {
-      this.products$ = this.productService.getProductsByPrice(this.maxPrice);
-    }
-  }
 }
-
