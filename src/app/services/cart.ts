@@ -6,7 +6,8 @@ import { environment } from '../../environments/environment.development';
 @Injectable({
   providedIn: 'root',
 })
-export class Cart {
+
+export class CartService {
 
   private httpClient = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/cart`;
