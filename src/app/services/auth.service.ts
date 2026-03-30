@@ -2,13 +2,14 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
+import {environment} from '../../environments/environment.development'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private baseUrl = 'http://localhost:1234/auth';
-  private usersUrl = 'http://localhost:1234/users';
+  private baseUrl = `${environment.apiUrl}/auth`;
+  private usersUrl = `${environment.apiUrl}/users`;
 
   // State management
   private userState = signal<any>(JSON.parse(localStorage.getItem('user') || 'null'));
