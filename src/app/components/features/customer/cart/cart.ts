@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CartService } from '../../../../services/cart';
 import { CartModel } from '../../../../models/cart';
 import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   standalone: true, 
-  imports: [CommonModule],
+  imports: [CommonModule , RouterLink],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
@@ -43,6 +44,7 @@ export class Cart {
     })
   }
 
+  
   increaseQuantityByOne(productId: string): void {
     let productQuantity = this.cartdata?.items.find(item => item.product._id === productId)?.quantity || 0;
     this.updateQuantity(productId, productQuantity + 1);

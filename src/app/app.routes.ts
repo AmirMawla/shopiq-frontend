@@ -4,7 +4,7 @@ import { AuthLayoutComponent } from './components/layouts/auth-layout/auth-layou
 import { ProductList } from './components/features/customer/product-list/product-list';
 import { ProductDetails } from './components/features/customer/product-details/product-details';
 import { AddProduct } from './components/features/customer/add-product/add-product';
-
+import { Cart } from './components/features/customer/cart/cart';
 export const routes: Routes = [
   {
     path: '',
@@ -15,7 +15,7 @@ export const routes: Routes = [
       { path: 'products/:id', component: ProductDetails, title: 'Product Details' },
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
       { path: 'products/edit/:id', component: AddProduct, title: 'Edit Product' },
-      
+      { path: 'cart', component: Cart, title: 'Shopping Cart' },
     ]
   },
   {
