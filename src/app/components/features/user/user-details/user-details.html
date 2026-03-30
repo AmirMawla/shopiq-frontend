@@ -1,0 +1,72 @@
+<div class="profile-container">
+    <div class="section-header">
+        <h1 class="page-title" style="margin-bottom: 0;">My Account</h1>
+        <div class="tab-group">
+            <button class="tab-btn" [class.active]="activeTab() === 'profile'"
+                (click)="activeTab.set('profile')">Profile</button>
+            <button class="tab-btn" [class.active]="activeTab() === 'security'"
+                (click)="activeTab.set('security')">Security</button>
+        </div>
+    </div>
+
+    @if (isLoading()) {
+    <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+    } @else if (errorMessage()) {
+    <div class="card-siq error-card">
+        <p class="text-danger-siq">{{ errorMessage() }}</p>
+        <button class="btn-siq" (click)="fetchUserProfile()">Retry</button>
+    </div>
+    } @else if (user()) {
+
+    @if (activeTab() === 'profile') {
+    <div class="profile-grid animate-in">
+        <div class="card-siq profile-main">
+            <div class="profile-header">
+                <div class="avatar-large">
+                    @if (user().profilePicture?.url) {
+                    <img [src]="user().profilePicture.url" [alt]="user().name">
+                    } @else {
+                    <span>{{ getInitials(user().name) }}</span>
+                    }
+                </div>
+                <div class="header-text">
+                    <h1 class="user-name">{{ user().name }}</h1>
+                    <p class="user-email">{{ user().email }}</p>
+                    <div class="pill-group">
+                        <span class="pill pill-shipped">{{ user().role | titlecase }}</span>
+                        <span class="pill pill-approved">Active Account</span>
+                    </div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Member Since</span>
+                    <span class="info-value">{{ user().createdAt | date:'mediumDate' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Auth Method</span>
+                    <span class="info-value">{{ user().authProvider | titlecase }}</span>
+                </div>
+            </div>
+        </div>
+
+        @if (user().sellerProfile?.storeName) {
+        <div class="card-siq seller-card">
+            <h3 class="section-title">Store: {{ user().sellerProfile.storeName }}</h3>
+            <p class="bio-text">{{ user().sellerProfile.bio }}</p>
+        </div>
+        }
+    </div>
+    }
+
+    @if (activeTab() === 'security') {
+    <div class="animate-in">
+        <app-change-password></app-change-password>
+    </div>
+    }
+    }
+</div>

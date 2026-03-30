@@ -5,6 +5,12 @@ import { ProductList } from './components/features/customer/product-list/product
 import { ProductDetails } from './components/features/customer/product-details/product-details';
 import { AddProduct } from './components/features/customer/add-product/add-product';
 import { Cart } from './components/features/customer/cart/cart';
+import { LoginComponent } from './components/features/auth/login/login';
+import { SignupComponent } from './components/features/auth/signup/signup';
+import { LoginSuccessComponent } from './components/features/auth/login-success/login-success';
+import { UserDetailsComponent } from './components/features/user/user-details/user-details';
+import { ForgotPasswordComponent } from './components/features/auth/forgot-password/forgot-password';
+
 export const routes: Routes = [
   {
     path: '',
@@ -16,16 +22,19 @@ export const routes: Routes = [
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
       { path: 'products/edit/:id', component: AddProduct, title: 'Edit Product' },
       { path: 'cart', component: Cart, title: 'Shopping Cart' },
-    ]
+      { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
+    ],
   },
+
   {
     path: 'auth',
     component: AuthLayoutComponent,
     children: [
-      // Uncomment when Login and Signup components are created
-      // { path: 'login', component: Login, title: 'Login' },
-      // { path: 'signup', component: Signup, title: 'Signup' },
-    ]
+      { path: 'login', component: LoginComponent, title: 'Login' },
+      { path: 'signup', component: SignupComponent, title: 'Signup' },
+      { path: 'login-success', component: LoginSuccessComponent, title: 'LoginSuccess' },
+      { path: 'forgot-password', component: ForgotPasswordComponent, title: 'Forgot Password' },
+    ],
   },
-  { path: '**', redirectTo: 'products' }
+  { path: '**', redirectTo: 'LoginSuccess' },
 ];

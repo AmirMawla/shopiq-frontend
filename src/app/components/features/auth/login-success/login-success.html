@@ -1,0 +1,27 @@
+<div class="auth-container">
+  <div class="auth-card success-card">
+    <div class="success-flow">
+      <div class="avatar-wrapper">
+        @if (userProfilePic) {
+        <img [src]="userProfilePic" class="user-avatar-lg" alt="Profile">
+        } @else {
+        <div class="user-avatar-lg placeholder-avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        }
+        <div class="check-badge">
+          <i class="fa-solid fa-check"></i>
+        </div>
+      </div>
+
+      <h3>Welcome, {{ userName }}!</h3>
+      <p class="text-muted-siq">Authentication successful. Redirecting you home...</p>
+
+      <div class="action-area">
+        <button (click)="navigateToHome()" class="btn-siq w-full">
+          Take me Home Now
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
