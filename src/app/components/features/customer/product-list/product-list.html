@@ -19,7 +19,7 @@
         <select class="form-input-siq" [(ngModel)]="selectedCategoryId"
           (change)="filterByCategory(selectedCategoryId)">
           <option value="">All Categories</option>
-          @for(cat of categories$ | async; track cat._id){
+          @for(cat of categories; track cat._id){
             <option [value]="cat._id">{{ cat.name }}</option>
           }
         </select>
@@ -33,8 +33,7 @@
   </div>
 
   <div class="row row-cols-1 row-cols-md-4 g-3">
-    <!-- @for(p of filteredProducts; track p._id){ -->
-     @for(p of products$ | async; track p._id){
+     @for(p of products; track p._id){
       <div class="col">
         <div class="product-card" (click)="navigateToDetails(p._id!)">
           <img [src]="p.imageUrl" class="product-card-img" alt="{{ p.name }}">
@@ -58,7 +57,9 @@
 
     @empty {
       <div class="col-12 text-center py-5">
-        <p class="text-muted-siq">No products found </p>
+        <p class="text-muted-siq">
+          @if (loading) { Loading... } @else { No products found }
+        </p>
       </div>
     }
   </div>
