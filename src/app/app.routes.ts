@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { CustomerLayoutComponent } from './components/layouts/customer-layout/customer-layout';
 import { AuthLayoutComponent } from './components/layouts/auth-layout/auth-layout';
+import { AdminLayoutComponent } from './components/layouts/admin-layout/admin-layout';
+import { SellerLayoutComponent } from './components/layouts/seller-layout/seller-layout';
 import { ProductList } from './components/features/customer/product-list/product-list';
 import { ProductDetails } from './components/features/customer/product-details/product-details';
 import { AddProduct } from './components/features/customer/add-product/add-product';
@@ -15,6 +17,10 @@ import { OrderDetails } from './components/features/customer/order-details/order
 import { TrackOrder } from './components/features/customer/track-order/track-order';
 import { Cart } from './components/features/customer/cart/cart';
 import { Home } from './components/features/customer/home/home';
+import { ADMIN_ROUTES } from './components/features/admin/admin.routes';
+import { SELLER_ROUTES } from './components/features/seller/seller.routes';
+import { authGuard } from './guards/auth-guard';
+import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
   {
@@ -46,6 +52,18 @@ export const routes: Routes = [
       { path: 'login-success', component: LoginSuccessComponent, title: 'LoginSuccess' },
       { path: 'forgot-password', component: ForgotPasswordComponent, title: 'Forgot Password' },
     ],
+  },
+{
+    path: 'admin',
+    component: AdminLayoutComponent,
+    children: ADMIN_ROUTES,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin'] }
+  },
+  {
+    path: 'seller',
+    component: SellerLayoutComponent,
+    children: SELLER_ROUTES,
   },
   { path: '**', redirectTo: 'LoginSuccess' },
 ];
