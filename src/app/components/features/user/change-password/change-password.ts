@@ -14,7 +14,7 @@ import { AuthService } from '../../../../services/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './change-password.html',
-  styleUrls: ['./change-password.css'],
+  styleUrls: ['./change-password.css', '../user-shared.css'],
 })
 export class ChangePasswordComponent {
   private fb = inject(FormBuilder);
@@ -26,7 +26,7 @@ export class ChangePasswordComponent {
 
   passwordForm = this.fb.group(
     {
-      currentPassword: ['', [Validators.required]],
+      oldPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
     },
@@ -36,6 +36,7 @@ export class ChangePasswordComponent {
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const pass = control.get('newPassword');
     const confirm = control.get('confirmPassword');
+
     return pass && confirm && pass.value !== confirm.value ? { mismatch: true } : null;
   }
 
@@ -45,8 +46,9 @@ export class ChangePasswordComponent {
       this.errorMessage.set(null);
       this.successMessage.set(null);
 
-      // const { confirmPassword, ...data } = this.passwordForm.value;
-      this.authService.changePassword(this.passwordForm.value).subscribe({
+      const { oldPassword, newPassword } = this.passwordForm.getRawValue();
+
+      this.authService.changePassword({ oldPassword, newPassword }).subscribe({
         next: () => {
           this.successMessage.set('Password updated successfully');
           this.passwordForm.reset();
