@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Product } from '../models/product';
 import { environment } from '../../environments/environment';
 
@@ -16,9 +16,9 @@ export interface SingleProductResponse {
 @Injectable({
   providedIn: 'root',
 })
-export class ProductService { 
+export class ProductService {
   private httpClient = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/products`; 
+  private apiUrl = `${environment.apiUrl}/products`;
 
   getAllProducts(): Observable<ProductResponse> {
     return this.httpClient.get<ProductResponse>(this.apiUrl)
@@ -51,4 +51,3 @@ export class ProductService {
     return this.httpClient.get<ProductResponse>(`${this.apiUrl}?maxPrice=${maxPrice}`)
   }
 }
-

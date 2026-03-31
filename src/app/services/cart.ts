@@ -44,7 +44,7 @@ export class CartService {
   }
 
   isItemInCart(productId: string): Observable<any> {
-    return this.httpClient.get(`${this.apiUrl}/is-item-in-cart`, { params: { productId }, 'headers': this.headers() })
+    return this.httpClient.get(`${this.apiUrl}/is-item-in-cart/${productId}`, { 'headers': this.headers() })
   }
 
   getRecipet(): Observable<any> {
