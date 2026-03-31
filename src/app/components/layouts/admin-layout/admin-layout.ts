@@ -16,8 +16,8 @@ export class AdminLayoutComponent {
       title: 'Main',
       items: [
         { label: 'Dashboard', route: '/admin/dashboard' },
-        { label: 'Products', route: '/admin/products', badge: 128 },
-        { label: 'Orders', route: '/admin/orders', badge: 24 },
+        { label: 'Products', route: '/admin/products'},
+        { label: 'Orders', route: '/admin/orders'},
         { label: 'Users', route: '/admin/users' },
         { label: 'Categories', route: '/admin/categories' },
         { label: 'Banners', route: '/admin/banners' },
