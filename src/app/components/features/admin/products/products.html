@@ -1,0 +1,46 @@
+<div>
+  <div class="section-header">
+    <h2 class="page-title">Product Management</h2>
+  </div>
+
+  @if (loading) {
+    <div class="text-muted-siq">Loading products...</div>
+  } @else if (error) {
+    <div class="text-danger-siq">{{ error }}</div>
+  } @else {
+    <div class="card-siq">
+      <table class="table-siq">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of products; track product._id) {
+            <tr>
+              <td>{{ product.name }}</td>
+              <td>${{ product.price }}</td>
+              <td>{{ product.stock }}</td>
+              <td>{{ product.categoryId?.name }}</td>
+              <td>
+                <span [class]="product.isActive ? 'pill pill-active' : 'pill pill-inactive'">
+                  {{ product.isActive ? 'Active' : 'Deleted' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-outline-siq" (click)="deleteProduct(product._id)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
