@@ -1,0 +1,85 @@
+<div class="user-orders-wrap">
+  <div class="user-orders-header">
+    <div>
+      <h2 class="page-title">My Orders</h2>
+      <div class="text-muted-siq">Track your recent purchases and their status.</div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="user-orders-empty">Loading your orders...</div>
+  } @else if (errorMessage) {
+    <div class="user-orders-error card-siq">
+      <div class="user-orders-error-title">Something went wrong</div>
+      <div class="user-orders-error-body">{{ errorMessage }}</div>
+    </div>
+  } @else if (!orders.length) {
+    <div class="user-orders-empty">
+      You don't have any orders yet.
+    </div>
+  } @else {
+    <div class="user-orders-list">
+      @for (order of orders; track order.id) {
+        <div class="order-card card-siq">
+          <div class="order-main">
+            <div class="order-id">Order #{{ order.id }}</div>
+            <div class="order-meta">
+              <span class="muted-text">Placed on</span>
+              <span class="order-date">
+                {{ order.orderDate | date: 'mediumDate' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="order-middle">
+            <div class="order-vendor">
+              <div class="muted-text">Vendors</div>
+              <div class="order-vendor-name">
+                @if (order.vendors.length) {
+                  <div class="vendor-list">
+                    @for (v of order.vendors; track (v.vendorId ?? v.vendorName)) {
+                      <div class="vendor-item">
+                        <span class="vendor-dot"></span>
+                        <span class="vendor-name">{{ v.vendorName }}</span>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="vendor-item">
+                    <span class="vendor-dot"></span>
+                    <span class="vendor-name">Unknown Vendor</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="order-qty">
+              <div class="muted-text">Items</div>
+              <div class="order-qty-value">{{ order.itemCount }}</div>
+            </div>
+
+            <div class="order-total">
+              <div class="muted-text">Total</div>
+              <div class="order-total-value">${{ order.totalAmount }}</div>
+            </div>
+
+            <div class="order-status">
+              <span class="pill" [ngClass]="order.status === 'delivered' ? 'pill-delivered' :
+                                           order.status === 'shipped' ? 'pill-shipped' :
+                                           order.status === 'proccessing' ? 'pill-processing' :
+                                           order.status === 'canceled' ? 'pill-cancelled' : 'pill-pending'">
+                {{ order.status | titlecase }}
+              </span>
+            </div>
+          </div>
+
+          <div class="order-actions">
+            <button type="button" class="btn-outline-siq" (click)="onShow(order.id)">
+              Show
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
