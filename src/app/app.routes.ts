@@ -9,6 +9,7 @@ import { SignupComponent } from './components/features/auth/signup/signup';
 import { LoginSuccessComponent } from './components/features/auth/login-success/login-success';
 import { UserDetailsComponent } from './components/features/user/user-details/user-details';
 import { ForgotPasswordComponent } from './components/features/auth/forgot-password/forgot-password';
+import { ConfirmOrder } from './components/features/customer/confirm-order/confirm-order';
 
 export const routes: Routes = [
   {
@@ -20,6 +21,7 @@ export const routes: Routes = [
       { path: 'products/:id', component: ProductDetails, title: 'Product Details' },
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
       { path: 'products/edit/:id', component: AddProduct, title: 'Edit Product' },
+      { path: 'confirm-order', component: ConfirmOrder, title: 'Confirm Order' },
       { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
     ],
   },

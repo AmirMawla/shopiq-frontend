@@ -7,6 +7,7 @@ import type {
   CreateOrderResponse,
   OrderByIdResponse,
   OrderDetailsResponse,
+  CheckoutPreviewResponse,
   OrdersQuery,
   PagedResult,
   SpecificVendorOrderResponse,
@@ -91,6 +92,13 @@ export class OrderService {
     });
   }
 
+
+  getCheckoutPreview(): Observable<ApiResponse<CheckoutPreviewResponse>> {
+    return this.httpClient.get<ApiResponse<CheckoutPreviewResponse>>(
+      `${this.apiUrl}/checkout-preview`,
+      { headers: this.headers() as any }
+    );
+  }
 
   cancelOrder(orderId: string): Observable<any> {
     return this.httpClient.post(`${this.apiUrl}/${orderId}/cancel`, {}, { headers: this.headers() as any });

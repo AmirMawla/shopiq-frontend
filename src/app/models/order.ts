@@ -1,4 +1,5 @@
 export type OrderStatus =
+  | 'notpayed'
   | 'pending'
   | 'proccessing'
   | 'shipped'
@@ -172,5 +173,25 @@ export interface VendorRecentOrder {
   status: OrderStatus | string;
   customerName: string;
   items: Array<{ productName: string; quantity: number; price: number }>;
+}
+
+export interface CheckoutPreviewItem {
+  vendorId: string | null;
+  vendorName: string;
+  productId: string;
+  productName: string;
+  productImage?: string | null;
+  price: number;
+  quantity: number;
+  lineTotal: number;
+}
+
+export interface CheckoutPreviewResponse {
+  subtotal: number;
+  discountAmount: number;
+  promoCode: string | null;
+  totalAmount: number;
+  itemCount: number;
+  items: CheckoutPreviewItem[];
 }
 
