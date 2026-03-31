@@ -21,6 +21,7 @@ import { ADMIN_ROUTES } from './components/features/admin/admin.routes';
 import { SELLER_ROUTES } from './components/features/seller/seller.routes';
 import { authGuard } from './guards/auth-guard';
 import { roleGuard } from './guards/role-guard';
+import { EditUserDetails } from './components/features/user/edit-user-details/edit-user-details';
 
 export const routes: Routes = [
   {
@@ -41,6 +42,7 @@ export const routes: Routes = [
       { path: 'user-orders/:id', component: OrderDetails, title: 'Order Details' },
       { path: 'track-order/:orderId/:vendorId', component: TrackOrder, title: 'Track Order' },
       { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
+      { path: 'account/profile/edit', component: EditUserDetails, title: 'Edit Profile' },
     ],
   },
   {
