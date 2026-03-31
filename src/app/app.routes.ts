@@ -14,13 +14,17 @@ import { UserOrders } from './components/features/customer/user-orders/user-orde
 import { OrderDetails } from './components/features/customer/order-details/order-details';
 import { TrackOrder } from './components/features/customer/track-order/track-order';
 import { Cart } from './components/features/customer/cart/cart';
+import { Home } from './components/features/customer/home/home';
 
 export const routes: Routes = [
   {
     path: '',
     component: CustomerLayoutComponent,
     children: [
-      { path: '', redirectTo: 'products', pathMatch: 'full' },
+       { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: Home, title: 'Home' },
+  
+      // { path: '', redirectTo: 'products', pathMatch: 'full' },
       { path: 'products', component: ProductList, title: 'Products' },
       { path: 'products/:id', component: ProductDetails, title: 'Product Details' },
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
