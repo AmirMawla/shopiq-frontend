@@ -11,7 +11,101 @@
       <a routerLink="/user-orders" class="btn-ghost-siq back-btn">
         <i class="fa-solid fa-arrow-left"></i> Back to My Orders
       </a>
+
+      <div class="topbar-actions">
+        <button
+          type="button"
+          class="btn-outline-siq cancel-btn"
+          [disabled]="order.status === 'delivered' || order.status === 'canceled' || order.status === 'returned' || cancelLoading"
+          (click)="openCancelModal()"
+        >
+          Cancel order
+        </button>
+      </div>
     </div>
+
+    @if (cancelError) {
+      <div class="order-cancel-error">
+        {{ cancelError }}
+      </div>
+    }
+
+    @if (showCancelModal) {
+      <div class="modal-backdrop" (click)="closeCancelModal()"></div>
+      <div class="modal-shell" role="dialog" aria-modal="true">
+        <div class="modal-card card-siq" (click)="$event.stopPropagation()">
+          <div class="modal-head">
+            <div>
+              <div class="modal-title">Cancel this order?</div>
+              <div class="modal-sub text-muted-siq">
+                This will cancel the whole order. You can’t undo this action.
+              </div>
+            </div>
+            <button type="button" class="modal-x" (click)="closeCancelModal()" [disabled]="cancelLoading">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="modal-summary">
+              <div class="ms-row">
+                <span class="muted-text">Order</span>
+                <strong>#{{ order.id }}</strong>
+              </div>
+              <div class="ms-row">
+                <span class="muted-text">Placed</span>
+                <strong>{{ order.orderDate | date: 'mediumDate' }}</strong>
+              </div>
+              <div class="ms-row">
+                <span class="muted-text">Status</span>
+                <span class="pill"
+                  [ngClass]="order.status === 'delivered' ? 'pill-delivered' :
+                             order.status === 'shipped' ? 'pill-shipped' :
+                             order.status === 'proccessing' ? 'pill-processing' :
+                             order.status === 'canceled' ? 'pill-cancelled' : 'pill-pending'">
+                  {{ order.status | titlecase }}
+                </span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="modal-totals">
+              <div class="ms-row">
+                <span class="muted-text">Subtotal</span>
+                <strong>${{ order.subtotal ?? 0 }}</strong>
+              </div>
+              <div class="ms-row">
+                <span class="muted-text">Discount</span>
+                <strong class="text-warning-siq">-${{ order.discountAmount ?? 0 }}</strong>
+              </div>
+              <div class="ms-row">
+                <span class="muted-text">Shipping</span>
+                <strong class="text-primary-siq">${{ order.shippingFee ?? 0 }}</strong>
+              </div>
+              <div class="ms-row total">
+                <span class="muted-text">Total</span>
+                <strong class="total">${{ order.totalAmount }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-ghost-siq" (click)="closeCancelModal()" [disabled]="cancelLoading">
+              Back
+            </button>
+            <button
+              type="button"
+              class="btn-siq btn-danger-siq"
+              [disabled]="order.status === 'delivered' || order.status === 'returned' || cancelLoading"
+              (click)="onCancelOrder()"
+            >
+              @if (cancelLoading) { Cancelling... } @else { Confirm cancel }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
 
     <div class="order-details-header">
       <div class="order-hero card-siq">
@@ -81,7 +175,12 @@
               </div>
             </div>
             <div class="vendor-actions">
-              <button type="button" class="btn-outline-siq" (click)="onTrackVendor(vendor)">
+              <button
+                type="button"
+                class="btn-outline-siq"
+                (click)="onTrackVendor(vendor)"
+                [disabled]="order.status === 'canceled' || order.status === 'returned' || order.status === 'notpayed'"
+              >
                 Track order
               </button>
             </div>

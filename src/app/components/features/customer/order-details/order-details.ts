@@ -19,6 +19,9 @@ export class OrderDetails implements OnInit {
 
   loading = true;
   errorMessage: string | null = null;
+  cancelLoading = false;
+  cancelError: string | null = null;
+  showCancelModal = false;
 
   order: OrderDetailsResponse | null = null;
   orderId: string | null = null;
@@ -50,5 +53,43 @@ export class OrderDetails implements OnInit {
   onTrackVendor(vendor: OrderDetailsVendorSummary): void {
     if (!this.orderId || !vendor.vendorId) return;
     this.router.navigate(['/track-order', this.orderId, vendor.vendorId]);
+  }
+
+  openCancelModal(): void {
+    if (!this.order) return;
+    if (this.order.status === 'delivered') return;
+    this.cancelError = null;
+    this.showCancelModal = true;
+    this.cdr.detectChanges();
+  }
+
+  closeCancelModal(): void {
+    if (this.cancelLoading) return;
+    this.showCancelModal = false;
+    this.cdr.detectChanges();
+  }
+
+  onCancelOrder(): void {
+    if (!this.orderId || !this.order) return;
+    if (this.order.status === 'delivered') return;
+    if (this.cancelLoading) return;
+
+    this.cancelLoading = true;
+    this.cancelError = null;
+    this.cdr.detectChanges();
+
+    this.orderService.cancelOrder(this.orderId).subscribe({
+      next: () => {
+        this.cancelLoading = false;
+        this.order = { ...this.order!, status: 'canceled' as any };
+        this.showCancelModal = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cancelLoading = false;
+        this.cancelError = 'Failed to cancel this order. Please try again.';
+        this.cdr.detectChanges();
+      },
+    });
   }
 }
