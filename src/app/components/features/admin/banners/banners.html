@@ -1,1 +1,79 @@
-<p>banners works!</p>
+<div>
+  <div class="section-header">
+    <h2 class="page-title">Banner Management</h2>
+    <button class="btn-siq" (click)="showForm = !showForm">
+      + Add Banner
+    </button>
+  </div>
+
+  @if (showForm) {
+    <div class="card-siq" style="margin-bottom: 24px;">
+      <div class="form-group">
+        <label class="form-label-siq">Title</label>
+        <input class="form-input-siq" type="text" placeholder="Banner title" [(ngModel)]="newBanner.title"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label-siq">Image URL</label>
+        <input class="form-input-siq" type="text" placeholder="https://..." [(ngModel)]="newBanner.imageUrl"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label-siq">Link</label>
+        <input class="form-input-siq" type="text" placeholder="https://..." [(ngModel)]="newBanner.link"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label-siq">Order</label>
+        <input class="form-input-siq" type="number" placeholder="0" [(ngModel)]="newBanner.order"/>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn-siq" (click)="createBanner()">Create</button>
+        <button class="btn-ghost-siq" (click)="showForm = false">Cancel</button>
+      </div>
+    </div>
+  }
+
+  @if (loading) {
+    <div class="text-muted-siq">Loading banners...</div>
+  } @else if (error) {
+    <div class="text-danger-siq">{{ error }}</div>
+  } @else {
+    <div class="card-siq">
+      <table class="table-siq">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Image</th>
+            <th>Link</th>
+            <th>Order</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (banner of banners; track banner._id) {
+            <tr>
+              <td>{{ banner.title }}</td>
+              <td>
+                <img [src]="banner.imageUrl" style="width:80px; height:40px; object-fit:cover; border-radius:4px;"/>
+              </td>
+              <td>{{ banner.link || 'N/A' }}</td>
+              <td>{{ banner.order }}</td>
+              <td>
+                <span [class]="banner.isActive ? 'pill pill-active' : 'pill pill-inactive'">
+                  {{ banner.isActive ? 'Active' : 'Hidden' }}
+                </span>
+              </td>
+              <td style="display:flex; gap:8px;">
+                <button class="btn-outline-siq" (click)="toggleBanner(banner._id)">
+                  {{ banner.isActive ? 'Hide' : 'Show' }}
+                </button>
+                <button class="btn-ghost-siq" (click)="deleteBanner(banner._id)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

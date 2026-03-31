@@ -20,6 +20,7 @@ export class AdminLayoutComponent {
         { label: 'Orders', route: '/admin/orders', badge: 24 },
         { label: 'Users', route: '/admin/users' },
         { label: 'Categories', route: '/admin/categories' },
+        { label: 'Banners', route: '/admin/banners' },
       ],
     },
     {
