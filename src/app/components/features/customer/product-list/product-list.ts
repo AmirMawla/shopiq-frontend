@@ -1,17 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import{Product} from '../../../../models/product';
+import { Product } from '../../../../models/product';
 import { Category } from '../../../../models/category';
 import { ProductService } from '../../../../services/product';
 import { CategoriesS} from '../../../../services/category';
-import { Observable } from 'rxjs';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [AsyncPipe, NgClass, FormsModule],
+  imports: [NgClass, FormsModule],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css'
 })
@@ -19,32 +19,72 @@ export class ProductList implements OnInit {
   private productService = inject(ProductService);
   private categoryService = inject(CategoriesS);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
-  products$!: Observable<Product[]>;
-  categories$!: Observable<Category[]>;
+  products: Product[] = [];
+  categories: Category[] = [];
+  loading = true;
+  errorMessage: string | null = null;
 
   selectedCategoryId: string = '';
   searchQuery: string = '';
-  maxPrice: number = 0
+  maxPrice: number = 0;
 
   ngOnInit(): void {
-    this.products$ = this.productService.getAllProducts();
-    this.categories$ = this.categoryService.getAllCategories();
+    this.loadCategories();
+    this.loadProducts();
+  }
+
+  private loadCategories(): void {
+    this.categoryService.getAllCategories().subscribe({
+      next: (res) => {
+        this.categories = Array.isArray(res.data) ? res.data : [];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.categories = [];
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  private loadProductsRequest(req: any): void {
+    this.loading = true;
+    this.errorMessage = null;
+    this.cdr.detectChanges();
+
+    req.subscribe({
+      next: (res: any) => {
+        this.products = Array.isArray(res.data) ? res.data : [];
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.products = [];
+        this.loading = false;
+        this.errorMessage = 'Failed to load products.';
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  private loadProducts(): void {
+    this.loadProductsRequest(this.productService.getAllProducts());
   }
 
   filterByCategory(catId: string): void {
     if (!catId) {
-      this.products$ = this.productService.getAllProducts();
+      this.loadProductsRequest(this.productService.getAllProducts());
     } else {
-      this.products$ = this.productService.getProductsByCatId(catId);
+      this.loadProductsRequest(this.productService.getProductsByCatId(catId));
     }
   }
 
   searchProducts(): void {
     if (!this.searchQuery) {
-      this.products$ = this.productService.getAllProducts();
+      this.loadProductsRequest(this.productService.getAllProducts());
     } else {
-      this.products$ = this.productService.searchProducts(this.searchQuery);
+      this.loadProductsRequest(this.productService.searchProducts(this.searchQuery));
     }
   }
 
@@ -53,9 +93,9 @@ export class ProductList implements OnInit {
   }
   filterByPrice(): void {
     if (!this.maxPrice || this.maxPrice <= 0) {
-      this.products$ = this.productService.getAllProducts();
+      this.loadProductsRequest(this.productService.getAllProducts());
     } else {
-      this.products$ = this.productService.getProductsByPrice(this.maxPrice);
+      this.loadProductsRequest(this.productService.getProductsByPrice(this.maxPrice));
     }
   }
 }

@@ -1,15 +1,12 @@
-import { ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AsyncPipe, JsonPipe } from '@angular/common';
-import{Product} from '../../../../models/product';
-import { Category } from '../../../../models/category';
+import { Product } from '../../../../models/product';
 import { ProductService } from '../../../../services/product';
-import { CategoriesS} from '../../../../services/category';
 
 @Component({
   selector: 'app-product-details',
-  imports: [RouterLink, AsyncPipe, JsonPipe],
+  standalone: true,
+  imports: [RouterLink],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
 })
@@ -18,11 +15,22 @@ export class ProductDetails implements OnInit {
   private apiProductsSErvice = inject(ProductService)
   private cdr = inject(ChangeDetectorRef)
 
-  product$!: Observable<Product>
+  product: Product | null = null;
+  loading = true;
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.params['id'];
-    this.product$ = this.apiProductsSErvice.getProductById(id)
-
+    this.apiProductsSErvice.getProductById(id).subscribe({
+      next: (res) => {
+        this.product = res.data;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.product = null;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 }
 

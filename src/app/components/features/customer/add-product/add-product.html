@@ -1,73 +1,3 @@
-<!-- <p>add-product works!</p> -->
-<!-- <div class="container-fluid px-4 py-4">
-
-  <div class="section-header">
-    <h1 class="page-title">{{ isEdit ? 'Edit Product' : 'Add New Product' }}</h1>
-  </div>
-
-  <div class="card-siq w-50 m-auto">
-    <form #productForm="ngForm" (ngSubmit)="submitProduct()">
-
-      <div class="form-group">
-        <label class="form-label-siq">Product Name</label>
-        <input type="text" class="form-input-siq" placeholder="Enter product name"
-          [(ngModel)]="product.name" name="name" required minlength="3"
-          #productName="ngModel"/>
-        @if(productName.errors?.['required'] && productName.touched){
-          <p class="text-danger-siq" style="font-size: 12px;">Name is required</p>
-        }
-      </div>
-
-      <div class="form-group">
-        <label class="form-label-siq">Description</label>
-        <textarea class="form-input-siq" rows="3" placeholder="Enter description"
-          [(ngModel)]="product.description" name="description" required>
-        </textarea>
-      </div>
-
-      <div class="row g-3">
-        <div class="col-md-6 form-group">
-          <label class="form-label-siq">Price</label>
-          <input type="number" class="form-input-siq" placeholder="0.00"
-            [(ngModel)]="product.price" name="price" required/>
-        </div>
-        <div class="col-md-6 form-group">
-          <label class="form-label-siq">Stock</label>
-          <input type="number" class="form-input-siq" placeholder="0"
-            [(ngModel)]="product.stock" name="stock" required/>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label-siq">Image URL</label>
-        <input type="text" class="form-input-siq" placeholder="https://..."
-          [(ngModel)]="product.images[0]" name="image" required/>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label-siq">Category</label>
-        <select class="form-input-siq" [(ngModel)]="product.categoryId"
-          name="categoryId" required>
-          <option value="">Select Category</option>
-          @for(cat of categories$ | async; track cat._id){
-            <option [value]="cat._id">{{ cat.name }}</option>
-          }
-        </select>
-      </div>
-
-      <div class="divider"></div>
-
-      <button type="submit" class="btn-siq w-100" [disabled]="productForm.invalid">
-        {{ isEdit ? '✅ Update Product' : '➕ Add Product' }}
-      </button>
-
-    </form>
-  </div>
-
-</div> -->
-
-
-<!-- <p>add-product works!</p> -->
 <div class="container-fluid px-4 py-4">
 
   <div class="section-header">
@@ -118,7 +48,7 @@
         <select class="form-input-siq" [(ngModel)]="product.categoryId"
           name="categoryId" required>
           <option value="">Select Category</option>
-          @for(cat of categories$ | async; track cat._id){
+          @for(cat of categories; track cat._id){
             <option [value]="cat._id">{{ cat.name }}</option>
           }
         </select>

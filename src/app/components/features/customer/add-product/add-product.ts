@@ -1,9 +1,7 @@
 
 import { Component, inject, OnInit } from '@angular/core';
 import { CategoriesS } from '../../../../services/category';
-import { Observable } from 'rxjs';
 import { Category } from '../../../../models/category';
-import { AsyncPipe } from '@angular/common';
 import { Product } from '../../../../models/product';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../services/product';
@@ -11,7 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-product',
-  imports: [AsyncPipe, FormsModule],
+  imports: [FormsModule],
   templateUrl: './add-product.html',
   styleUrl: './add-product.css',
 })
@@ -21,7 +19,7 @@ export class AddProduct implements OnInit {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute); 
 
-  categories$: Observable<Category[]> = this.categoriesService.getAllCategories();
+  categories: Category[] = [];
 
   product: Product = {
     name: '',
@@ -34,11 +32,16 @@ export class AddProduct implements OnInit {
   isEdit = false;
 
   ngOnInit(): void { 
+    this.categoriesService.getAllCategories().subscribe({
+      next: (res) => (this.categories = Array.isArray(res.data) ? res.data : []),
+      error: () => (this.categories = []),
+    });
+
     const id = this.activatedRoute.snapshot.params['id'];
     if (id) {
       this.isEdit = true;
       this.productsService.getProductById(id).subscribe({
-        next: (data) => this.product = data,
+        next: (res) => (this.product = res.data),
         error: (err) => console.log(err)
       });
     }

@@ -9,32 +9,28 @@
       <div class="col-md-5">
         <label class="form-label-siq">Search</label>
         <div class="topbar-search w-100">
-          <!-- <span>🔍</span> -->
-          <input type="text" placeholder="Search products..."
-            [(ngModel)]="searchQuery" (input)="searchProducts()"/>
+
+          <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" (input)="applyFilters()" />
         </div>
       </div>
       <div class="col-md-4">
         <label class="form-label-siq">Category</label>
-        <select class="form-input-siq" [(ngModel)]="selectedCategoryId"
-          (change)="filterByCategory(selectedCategoryId)">
+        <select class="form-input-siq" [(ngModel)]="selectedCategoryId" (change)="applyFilters()">
           <option value="">All Categories</option>
-          @for(cat of categories$ | async; track cat._id){
+          @for(cat of categories; track cat._id){
             <option [value]="cat._id">{{ cat.name }}</option>
           }
         </select>
       </div>
       <div class="col-md-3">
         <label class="form-label-siq">Max Price</label>
-        <input type="number" class="form-input-siq" placeholder="Max price"
-          [(ngModel)]="maxPrice" (input)="filterByPrice()"/>
+          <input type="number" class="form-input-siq" placeholder="Max price" [(ngModel)]="maxPrice" (input)="applyFilters()"/>
       </div>
     </div>
   </div>
 
   <div class="row row-cols-1 row-cols-md-4 g-3">
-    <!-- @for(p of filteredProducts; track p._id){ -->
-     @for(p of products$ | async; track p._id){
+     @for(p of products; track p._id){
       <div class="col">
         <div class="product-card" (click)="navigateToDetails(p._id!)">
           <img [src]="p.imageUrl" class="product-card-img" alt="{{ p.name }}">
@@ -48,17 +44,19 @@
               } @else if(p.stock <= 5){
                 <span class="pill pill-processing">Almost Out</span>
               } @else {
-                <span class="pill pill-active">In Stock</span>
+              <span class="pill pill-active">In Stock</span>
               }
-            </div>
           </div>
         </div>
       </div>
+    </div>
     }
 
     @empty {
       <div class="col-12 text-center py-5">
-        <p class="text-muted-siq">No products found </p>
+        <p class="text-muted-siq">
+          @if (loading) { Loading... } @else { No products found }
+        </p>
       </div>
     }
   </div>

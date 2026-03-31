@@ -1,0 +1,119 @@
+<div class="confirm-order-wrap">
+  <div class="confirm-order-header">
+    <div>
+      <h2 class="confirm-title">Confirm Order</h2>
+      <div class="confirm-subtitle">Review your cart totals and items before paying.</div>
+    </div>
+    <button type="button" class="btn-ghost-siq" (click)="onBack()">Back</button>
+  </div>
+
+  @if (loading) {
+    <div class="confirm-empty">Loading checkout preview...</div>
+  } @else if (errorMessage) {
+    <div class="confirm-error">
+      <div class="confirm-error-title">Something went wrong</div>
+      <div class="confirm-error-body">{{ errorMessage }}</div>
+    </div>
+  } @else if (preview) {
+    <div class="confirm-grid">
+      <section class="confirm-summary card-siq">
+        <div class="section-header">
+          <div class="section-title">Checkout Summary</div>
+          <span class="pill pill-processing">Ready</span>
+        </div>
+
+        <div class="summary-row">
+          <span class="muted">Subtotal</span>
+          <span class="value text-muted-siq">${{ preview.subtotal }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span class="muted">Discount</span>
+          <span class="value text-warning-siq">-${{ preview.discountAmount }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span class="muted">Shipping fee</span>
+          <span class="value text-primary-siq">${{ preview.shippingFee }}</span>
+        </div>
+
+        @if (preview.promoCode) {
+          <div class="summary-row">
+            <span class="muted">Promo</span>
+            <span class="value text-primary-siq">{{ preview.promoCode }}</span>
+          </div>
+        }
+
+        <div class="divider"></div>
+
+        <div class="summary-total">
+          <span class="muted">Total Amount</span>
+          <span class="value total">${{ preview.totalAmount }}</span>
+        </div>
+
+        <div style="margin-top: 14px;">
+          <button
+            type="button"
+            class="btn-siq confirm-btn"
+            [disabled]="confirmLoading"
+            (click)="onConfirm()"
+          >
+            @if (confirmLoading) { Confirming... } @else { Confirm }
+          </button>
+        </div>
+      </section>
+
+      <section class="confirm-items">
+        <div class="section-header">
+          <div class="section-title">Cart Items</div>
+          <div class="section-link">Amounts show price × quantity</div>
+        </div>
+
+        @for (group of groupedVendors; track group.vendorKey) {
+          <div class="vendor-card card-siq">
+            <div class="vendor-top">
+              <div class="vendor-title">{{ group.vendorName }}</div>
+              <div class="vendor-meta">
+                <div class="vendor-estimated muted-text">Vendor total: ${{ group.vendorSubtotal }}</div>
+              </div>
+            </div>
+
+            <table class="table-siq">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th style="width:90px;">Qty</th>
+                  <th style="width:140px;">Price</th>
+                  <th style="width:160px;">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of group.items; track item.productId) {
+                  <tr>
+                    <td>
+                      <div class="product-cell">
+                        <div class="product-thumb">
+                          <img
+                            [src]="item.productImage || 'assets/images/logo.png'"
+                            alt="Product"
+                          />
+                        </div>
+                        <div class="product-info">
+                          <div class="product-name">{{ item.productName }}</div>
+                          <div class="product-sub muted-text">Checkout line item</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price }}</td>
+                    <td>${{ item.lineTotal }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    </div>
+  }
+</div>

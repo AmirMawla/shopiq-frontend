@@ -10,6 +10,10 @@ import { SignupComponent } from './components/features/auth/signup/signup';
 import { LoginSuccessComponent } from './components/features/auth/login-success/login-success';
 import { UserDetailsComponent } from './components/features/user/user-details/user-details';
 import { ForgotPasswordComponent } from './components/features/auth/forgot-password/forgot-password';
+import { ConfirmOrder } from './components/features/customer/confirm-order/confirm-order';
+import { UserOrders } from './components/features/customer/user-orders/user-orders';
+import { OrderDetails } from './components/features/customer/order-details/order-details';
+import { TrackOrder } from './components/features/customer/track-order/track-order';
 
 export const routes: Routes = [
   {
@@ -22,6 +26,10 @@ export const routes: Routes = [
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
       { path: 'products/edit/:id', component: AddProduct, title: 'Edit Product' },
       { path: 'cart', component: Cart, title: 'Shopping Cart' },
+      { path: 'confirm-order', component: ConfirmOrder, title: 'Confirm Order' },
+      { path: 'user-orders', component: UserOrders, title: 'My Orders' },
+      { path: 'user-orders/:id', component: OrderDetails, title: 'Order Details' },
+      { path: 'track-order/:orderId/:vendorId', component: TrackOrder, title: 'Track Order' },
       { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
     ],
   },
