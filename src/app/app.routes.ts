@@ -13,6 +13,8 @@ import { UserDetailsComponent } from './components/features/user/user-details/us
 import { ForgotPasswordComponent } from './components/features/auth/forgot-password/forgot-password';
 import { ADMIN_ROUTES } from './components/features/admin/admin.routes';
 import { SELLER_ROUTES } from './components/features/seller/seller.routes';
+import { authGuard } from './guards/auth-guard';
+import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
   {
@@ -41,6 +43,8 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminLayoutComponent,
     children: ADMIN_ROUTES,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin'] }
   },
   {
     path: 'seller',

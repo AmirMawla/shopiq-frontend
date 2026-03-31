@@ -9,18 +9,47 @@ import { Orders } from './orders/orders';
 import { Banners } from './banners/banners';
 
 export const ADMIN_ROUTES: Routes = [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
-    path: '',
+    path: 'dashboard',
+    component: Dashboard,
+    title: 'Admin Dashboard',
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['admin'] },
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: Dashboard, title: 'Admin Dashboard' },
-      { path: 'users', component: Users, title: 'Users' },
-      { path: 'products', component: Products, title: 'Products' },
-      { path: 'categories', component: Categories, title: 'Categories' },
-      { path: 'orders', component: Orders, title: 'Orders' },
-      { path: 'banners', component: Banners, title: 'Banners' },
-    ]
-  }
+    data: { roles: ['admin'] }
+  },
+  {
+    path: 'users',
+    component: Users,
+    title: 'Users',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin'] }
+  },
+  {
+    path: 'products',
+    component: Products,
+    title: 'Products',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin'] }
+  },
+  {
+    path: 'categories',
+    component: Categories,
+    title: 'Categories',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin'] }
+  },
+  {
+    path: 'orders',
+    component: Orders,
+    title: 'Orders',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin'] }
+  },
+  {
+    path: 'banners',
+    component: Banners,
+    title: 'Banners',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['admin'] }
+  },
 ];
