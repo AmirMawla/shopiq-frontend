@@ -32,6 +32,11 @@
           <span class="value text-warning-siq">-${{ preview.discountAmount }}</span>
         </div>
 
+        <div class="summary-row">
+          <span class="muted">Shipping fee</span>
+          <span class="value text-primary-siq">${{ preview.shippingFee }}</span>
+        </div>
+
         @if (preview.promoCode) {
           <div class="summary-row">
             <span class="muted">Promo</span>

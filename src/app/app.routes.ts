@@ -12,6 +12,7 @@ import { ForgotPasswordComponent } from './components/features/auth/forgot-passw
 import { ConfirmOrder } from './components/features/customer/confirm-order/confirm-order';
 import { UserOrders } from './components/features/customer/user-orders/user-orders';
 import { OrderDetails } from './components/features/customer/order-details/order-details';
+import { TrackOrder } from './components/features/customer/track-order/track-order';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: 'confirm-order', component: ConfirmOrder, title: 'Confirm Order' },
       { path: 'user-orders', component: UserOrders, title: 'My Orders' },
       { path: 'user-orders/:id', component: OrderDetails, title: 'Order Details' },
+      { path: 'track-order/:orderId/:vendorId', component: TrackOrder, title: 'Track Order' },
       { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
     ],
   },

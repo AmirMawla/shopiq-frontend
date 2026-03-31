@@ -4,6 +4,22 @@
   padding: 24px 16px 40px;
 }
 
+.order-details-topbar {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  color: var(--text);
+}
+
 .order-details-header {
   display: flex;
   justify-content: space-between;
@@ -57,7 +73,7 @@
 
 .order-hero-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   position: relative;
   z-index: 1;
@@ -130,6 +146,43 @@
   justify-content: space-between;
   gap: 12px;
   align-items: center;
+}
+
+.vendor-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.vendor-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--primary-light);
+  border: 0.5px solid rgba(124, 110, 245, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vendor-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vendor-initials {
+  font-weight: 800;
+  color: var(--primary-text);
+  font-size: 14px;
+}
+
+.vendor-info {
+  min-width: 0;
 }
 
 .vendor-name {

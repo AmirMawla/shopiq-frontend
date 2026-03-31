@@ -1,0 +1,160 @@
+<div class="track-wrap">
+  @if (loading) {
+    <div class="track-empty">Loading tracking details...</div>
+  } @else if (errorMessage) {
+    <div class="track-error card-siq">
+      <div class="track-error-title">Something went wrong</div>
+      <div class="track-error-body">{{ errorMessage }}</div>
+    </div>
+  } @else if (data) {
+    <div class="track-topbar">
+      <a routerLink="/user-orders" class="btn-ghost-siq back-btn">
+        <i class="fa-solid fa-arrow-left"></i> Back to My Orders
+      </a>
+      <div class="track-actions">
+        @if (supportTelHref) {
+          <a class="btn-siq" [href]="supportTelHref">
+            <i class="fa-solid fa-headset"></i> Contact Support
+          </a>
+        } @else {
+          <button class="btn-siq" type="button" disabled>
+            <i class="fa-solid fa-headset"></i> Contact Support
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="track-hero card-siq">
+      <div class="track-hero-head">
+        <div class="track-head-left">
+
+          <div>
+          <div class="track-title">Tracking Details</div>
+          <div class="track-sub">
+            Order <strong>#{{ data.vendorOrder.orderId }}</strong> • {{ data.vendorOrder.vendorName }}
+          </div>
+          </div>
+        </div>
+        <span class="pill"
+          [ngClass]="shippingStatus === 'delivered' ? 'pill-delivered' :
+                     shippingStatus === 'outfordelivery' ? 'pill-shipped' :
+                     shippingStatus === 'preparing' ? 'pill-processing' :
+                     shippingStatus === 'canceled' ? 'pill-cancelled' : 'pill-processing'">
+          {{ (shippingStatus || 'preparing') | titlecase }}
+        </span>
+      </div>
+
+      <div class="track-steps">
+        <div class="step" [class]="stepState('pending')">
+          <div class="step-dot"><i class="fa-solid fa-file-invoice"></i></div>
+          <div class="step-label">Pending</div>
+        </div>
+        <div class="step-line" [class.done]="lineDone(0)"></div>
+        <div class="step" [class]="stepState('processing')">
+          <div class="step-dot"><i class="fa-solid fa-box"></i></div>
+          <div class="step-label">Processing</div>
+        </div>
+        <div class="step-line" [class.done]="lineDone(1)"></div>
+        <div class="step" [class]="stepState('shipped')">
+          <div class="step-dot"><i class="fa-solid fa-truck-fast"></i></div>
+          <div class="step-label">Shipped</div>
+        </div>
+        <div class="step-line" [class.done]="lineDone(2)"></div>
+        <div class="step" [class]="stepState('outfordelivery')">
+          <div class="step-dot"><i class="fa-solid fa-route"></i></div>
+          <div class="step-label">Out for delivery</div>
+        </div>
+        <div class="step-line" [class.done]="lineDone(3)"></div>
+        <div class="step" [class]="stepState('delivered')">
+          <div class="step-dot"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="step-label">Delivered</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="track-grid">
+      <div class="track-left">
+        <div class="map-shell card-siq">
+          <div class="map-head">
+            <div class="map-title">Delivery route</div>
+            <div class="muted-text">Preview (map integration later)</div>
+          </div>
+          <div class="map-body">
+            <div class="map-pin"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="map-badge">
+              <i class="fa-solid fa-truck"></i>
+              <span>Courier is on the way</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="products-shell">
+          <div class="section-header">
+            <div class="section-title">Products from this vendor</div>
+          </div>
+
+          <div class="products-grid">
+            @for (p of data.products; track p.productId) {
+              <div class="product-card-mini">
+                <div class="product-thumb">
+                  <img [src]="p.productImage || 'assets/images/logo.png'" alt="Product" loading="lazy" />
+                </div>
+                <div class="product-body">
+                  <div class="product-title">{{ p.productName }}</div>
+                  <div class="product-meta muted-text">${{ p.price }} × {{ p.quantity }}</div>
+                </div>
+                <div class="product-total">
+                  <div class="muted-text">Amount</div>
+                  <div class="product-total-value">${{ p.price * p.quantity }}</div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <aside class="track-right">
+        <div class="vendor-box card-siq">
+          <div class="vendor-box-title">Vendor</div>
+          <div class="vendor-box-head">
+            <div class="vendor-box-avatar">
+              @if (data.vendorOrder.vendorProfilePicture) {
+                <img [src]="data.vendorOrder.vendorProfilePicture" alt="Vendor" loading="lazy" />
+              } @else {
+                <span class="vendor-box-initials">{{ (data.vendorOrder.vendorName || 'V').slice(0, 1) }}</span>
+              }
+            </div>
+            <div class="vendor-box-name">{{ data.vendorOrder.vendorName }}</div>
+          </div>
+          <div class="vendor-box-row">
+            <span class="muted-text">Vendor subtotal</span>
+            <strong>${{ data.vendorOrder.vendorSubtotal }}</strong>
+          </div>
+          <div class="vendor-box-row">
+            <span class="muted-text">Items</span>
+            <strong>{{ data.vendorOrder.totalQuantity }}</strong>
+          </div>
+          <div class="divider"></div>
+          <div class="vendor-box-row">
+            <span class="muted-text">Phone</span>
+            <span class="vendor-phone">{{ supportPhone || '—' }}</span>
+          </div>
+        </div>
+
+        <div class="timeline card-siq">
+          <div class="timeline-title">Live timeline</div>
+          <div class="timeline-item">
+            <span class="timeline-dot"></span>
+            <div class="timeline-body">
+              <div class="timeline-head">
+                <strong>Current status</strong>
+                <span class="muted-text">{{ (shippingStatus || 'preparing') | titlecase }}</span>
+              </div>
+              <div class="muted-text">Updates will appear here once we store status history.</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
+</div>

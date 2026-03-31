@@ -55,6 +55,7 @@ export interface OrderDetailsVendorSummary {
   vendorId: string | null;
   vendorName: string;
   vendorPhone?: string | null;
+  vendorProfilePicture?: string | null;
   vendorSubtotal: number;
   totalQuantity: number;
   items: VendorOrderItemSummary[];
@@ -68,6 +69,7 @@ export interface OrderByIdResponse {
   customerName?: string;
   subtotal?: number | null;
   discountAmount?: number;
+  shippingFee?: number;
   promoCode?: string | null;
   totalAmount: number;
   orderDate: string;
@@ -81,6 +83,7 @@ export interface OrderDetailsResponse {
   id: string;
   subtotal?: number | null;
   discountAmount?: number;
+  shippingFee?: number;
   promoCode?: string | null;
   totalAmount: number;
   orderDate: string;
@@ -100,6 +103,7 @@ export interface SpecificVendorOrderResponse {
     vendorSubtotal: number;
     subtotal?: number | null;
     discountAmount?: number;
+    shippingFee?: number;
     promoCode?: string | null;
     totalAmount: number;
   };
@@ -189,6 +193,7 @@ export interface CheckoutPreviewItem {
 export interface CheckoutPreviewResponse {
   subtotal: number;
   discountAmount: number;
+  shippingFee: number;
   promoCode: string | null;
   totalAmount: number;
   itemCount: number;

@@ -7,6 +7,12 @@
       <div class="order-details-error-body">{{ errorMessage }}</div>
     </div>
   } @else if (order) {
+    <div class="order-details-topbar">
+      <a routerLink="/user-orders" class="btn-ghost-siq back-btn">
+        <i class="fa-solid fa-arrow-left"></i> Back to My Orders
+      </a>
+    </div>
+
     <div class="order-details-header">
       <div class="order-hero card-siq">
         <div class="order-hero-top">
@@ -35,6 +41,10 @@
             <div class="hero-value text-warning-siq">-${{ order.discountAmount ?? 0 }}</div>
           </div>
           <div class="hero-metric">
+            <div class="hero-label">Shipping</div>
+            <div class="hero-value text-primary-siq">${{ order.shippingFee ?? 0 }}</div>
+          </div>
+          <div class="hero-metric">
             <div class="hero-label">Promo</div>
             <div class="hero-value text-primary-siq">{{ order.promoCode || '—' }}</div>
           </div>
@@ -50,12 +60,24 @@
       @for (vendor of order.vendors; track vendor.vendorId ?? vendor.vendorName) {
         <section class="vendor-card card-siq">
           <div class="vendor-header">
-            <div>
-              <div class="vendor-name">{{ vendor.vendorName }}</div>
-              <div class="vendor-meta">
-                <span class="muted-text">Items: {{ vendor.totalQuantity }}</span>
-                <span class="muted-text"> • </span>
-                <span class="muted-text">Subtotal: ${{ vendor.vendorSubtotal }}</span>
+            <div class="vendor-left">
+              <div class="vendor-avatar">
+                @if (vendor.vendorProfilePicture) {
+                  <img [src]="vendor.vendorProfilePicture" alt="Vendor" loading="lazy" />
+                } @else {
+                  <span class="vendor-initials">
+                    {{ (vendor.vendorName || 'V').slice(0, 1) }}
+                  </span>
+                }
+              </div>
+
+              <div class="vendor-info">
+                <div class="vendor-name">{{ vendor.vendorName }}</div>
+                <div class="vendor-meta">
+                  <span class="muted-text">Items: {{ vendor.totalQuantity }}</span>
+                  <span class="muted-text"> • </span>
+                  <span class="muted-text">Subtotal: ${{ vendor.vendorSubtotal }}</span>
+                </div>
               </div>
             </div>
             <div class="vendor-actions">
