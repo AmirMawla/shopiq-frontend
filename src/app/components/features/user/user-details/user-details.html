@@ -33,8 +33,13 @@
                     }
                 </div>
                 <div class="header-text">
-                    <h1 class="user-name">{{ user().name }}</h1>
-                    <p class="user-email">{{ user().email }}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                        <div>
+                            <h1 class="user-name">{{ user().name }}</h1>
+                            <p class="user-email">{{ user().email }}</p>
+                        </div>
+                        <a routerLink="/account/profile/edit" class="btn-siq btn-sm">Edit Profile</a>
+                    </div>
                     <div class="pill-group">
                         <span class="pill pill-shipped">{{ user().role | titlecase }}</span>
                         <span class="pill pill-approved">Active Account</span>
@@ -42,6 +47,7 @@
                 </div>
             </div>
             <div class="divider"></div>
+
             <div class="info-grid">
                 <div class="info-item">
                     <span class="info-label">Member Since</span>
@@ -51,13 +57,58 @@
                     <span class="info-label">Auth Method</span>
                     <span class="info-value">{{ user().authProvider | titlecase }}</span>
                 </div>
+                @if (user().phone) {
+                <div class="info-item">
+                    <span class="info-label">Phone</span>
+                    <span class="info-value">{{ user().phone }}</span>
+                </div>
+                }
+                @if (user().birthdate) {
+                <div class="info-item">
+                    <span class="info-label">Birthdate</span>
+                    <span class="info-value">{{ user().birthdate | date:'longDate' }}</span>
+                </div>
+                }
             </div>
+
+            @if (user().address?.city) {
+            <div class="divider"></div>
+            <div class="info-item">
+                <span class="info-label">Address</span>
+                <span class="info-value">
+                    {{ user().address.street }}<br>
+                    {{ user().address.city }}, {{ user().address.state }} {{ user().address.zipCode }}<br>
+                    {{ user().address.country }}
+                </span>
+            </div>
+            }
         </div>
 
         @if (user().sellerProfile?.storeName) {
         <div class="card-siq seller-card">
             <h3 class="section-title">Store: {{ user().sellerProfile.storeName }}</h3>
             <p class="bio-text">{{ user().sellerProfile.bio }}</p>
+            <div class="info-grid" style="margin-top: 15px;">
+                <div class="info-item">
+                    <span class="info-label">Total Earnings</span>
+                    <span class="info-value text-success-siq">${{ user().sellerProfile.earnings }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="pill" [class.pill-approved]="user().sellerProfile.isApproved"
+                        [class.pill-pending]="!user().sellerProfile.isApproved">
+                        {{ user().sellerProfile.isApproved ? 'Approved' : 'Pending Approval' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        } @else {
+        <div class="card-siq seller-promo">
+            <div class="promo-content">
+                <h3>Want to start selling?</h3>
+                <p>Join our community of sellers and reach thousands of customers.</p>
+                <a routerLink="/seller/apply" class="btn-siq btn-outline">Join us as a seller</a>
+            </div>
         </div>
         }
     </div>

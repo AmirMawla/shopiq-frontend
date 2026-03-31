@@ -14,6 +14,11 @@
     display: flex;
     align-items: center;
     gap: 24px;
+    width: 100%;
+}
+
+.header-text {
+    flex: 1;
 }
 
 .avatar-large {
@@ -54,6 +59,7 @@
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    margin-top: 8px;
 }
 
 .info-grid {
@@ -76,24 +82,24 @@
     font-weight: 600;
     color: var(--text);
     font-size: 15px;
-}
-
-.store-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.bio-section {
-    padding: 16px;
-    background: var(--page-bg);
-    border-radius: var(--radius-md);
+    line-height: 1.5;
 }
 
 .bio-text {
     font-size: 14px;
     color: var(--muted-dark);
+}
+
+.seller-promo {
+    background: linear-gradient(135deg, var(--primary-light) 0%, #fff 100%);
+    border: 1px dashed var(--primary);
+    text-align: center;
+    padding: 30px;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
 }
 
 .loading-state {
@@ -118,23 +124,22 @@
     }
 }
 
-/* Responsive adjustments */
 @media (max-width: 640px) {
     .profile-header {
         flex-direction: column;
         text-align: center;
     }
 
+    .header-text>div {
+        flex-direction: column;
+        align-items: center !important;
+    }
+
     .pill-group {
         justify-content: center;
     }
-
-    .store-info {
-        grid-template-columns: 1fr;
-    }
 }
 
-/* chang pass */
 .tab-group {
     display: flex;
     gap: 8px;

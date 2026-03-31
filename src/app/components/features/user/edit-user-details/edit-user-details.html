@@ -1,0 +1,84 @@
+<div class="edit-profile-container animate-in">
+    <div class="card-siq">
+        <div class="form-header">
+            <a routerLink="/account/profile" class="back-link">← Back to Profile</a>
+            <h2 class="section-title">Edit Profile Details</h2>
+        </div>
+
+        @if (errorMessage()) {
+        <div class="alert alert-error">{{ errorMessage() }}</div>
+        }
+        @if (successMessage()) {
+        <div class="alert alert-success">{{ successMessage() }}</div>
+        }
+
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="info-label">Full Name</label>
+                    <input type="text" formControlName="name" class="input-siq"
+                        [class.border-danger]="profileForm.get('name')?.invalid && profileForm.get('name')?.touched">
+                    @if (profileForm.get('name')?.touched && profileForm.get('name')?.invalid) {
+                    <small class="text-danger-siq">Name must be 3-30 characters.</small>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label class="info-label">Birthdate</label>
+                    <input type="date" formControlName="birthdate" class="input-siq">
+                </div>
+
+                <div class="form-group">
+                    <label class="info-label">Phone Number</label>
+                    <input type="text" formControlName="phone" class="input-siq" placeholder="+1 234 567 890">
+                    @if (profileForm.get('phone')?.touched && profileForm.get('phone')?.invalid) {
+                    <small class="text-danger-siq">Please provide a valid phone format.</small>
+                    }
+                </div>
+
+                <div class="form-group" formGroupName="profilePicture">
+                    <label class="info-label">Profile Image URL</label>
+                    <input type="text" formControlName="url" class="input-siq" placeholder="https://...">
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <h3 class="subsection-title">Address Information</h3>
+
+            <div class="form-grid" formGroupName="address">
+                <div class="form-group full-width">
+                    <label class="info-label">Street Address</label>
+                    <input type="text" formControlName="street" class="input-siq">
+                </div>
+
+                <div class="form-group">
+                    <label class="info-label">City</label>
+                    <input type="text" formControlName="city" class="input-siq">
+                </div>
+
+                <div class="form-group">
+                    <label class="info-label">State / Province</label>
+                    <input type="text" formControlName="state" class="input-siq">
+                </div>
+
+                <div class="form-group">
+                    <label class="info-label">Zip Code</label>
+                    <input type="text" formControlName="zipCode" class="input-siq">
+                </div>
+
+                <div class="form-group">
+                    <label class="info-label">Country</label>
+                    <input type="text" formControlName="country" class="input-siq">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-siq btn-outline" routerLink="/profile"
+                    [disabled]="isSubmitting()">Cancel</button>
+                <button type="submit" class="btn-siq" [disabled]="isSubmitting()">
+                    {{ isSubmitting() ? 'Saving...' : 'Save Changes' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
