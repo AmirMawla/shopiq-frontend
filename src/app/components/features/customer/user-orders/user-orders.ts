@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { OrderService, ApiResponse } from '../../../../services/order';
-import type { PagedResult, VendorRecentOrder } from '../../../../models/order';
+import type { PagedResult } from '../../../../models/order';
 
 @Component({
   selector: 'app-user-orders',
@@ -13,6 +14,7 @@ import type { PagedResult, VendorRecentOrder } from '../../../../models/order';
 export class UserOrders implements OnInit {
   private orderService = inject(OrderService);
   private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
 
   loading = true;
   errorMessage: string | null = null;
@@ -60,7 +62,6 @@ export class UserOrders implements OnInit {
   }
 
   onShow(orderId: string): void {
-    // Placeholder: will navigate to order details in future
-    console.log('Show order', orderId);
+    this.router.navigate(['/user-orders', orderId]);
   }
 }

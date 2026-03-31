@@ -11,6 +11,7 @@ import { UserDetailsComponent } from './components/features/user/user-details/us
 import { ForgotPasswordComponent } from './components/features/auth/forgot-password/forgot-password';
 import { ConfirmOrder } from './components/features/customer/confirm-order/confirm-order';
 import { UserOrders } from './components/features/customer/user-orders/user-orders';
+import { OrderDetails } from './components/features/customer/order-details/order-details';
 
 export const routes: Routes = [
   {
@@ -23,7 +24,8 @@ export const routes: Routes = [
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
       { path: 'products/edit/:id', component: AddProduct, title: 'Edit Product' },
       { path: 'confirm-order', component: ConfirmOrder, title: 'Confirm Order' },
-       { path: 'user-orders', component: UserOrders, title: 'My Orders' },
+      { path: 'user-orders', component: UserOrders, title: 'My Orders' },
+      { path: 'user-orders/:id', component: OrderDetails, title: 'Order Details' },
       { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
     ],
   },

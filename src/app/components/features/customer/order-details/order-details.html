@@ -1,0 +1,112 @@
+<div class="order-details-wrap" *ngIf="true">
+  @if (loading) {
+    <div class="order-details-empty">Loading order details...</div>
+  } @else if (errorMessage) {
+    <div class="order-details-error card-siq">
+      <div class="order-details-error-title">Something went wrong</div>
+      <div class="order-details-error-body">{{ errorMessage }}</div>
+    </div>
+  } @else if (order) {
+    <div class="order-details-header">
+      <div class="order-hero card-siq">
+        <div class="order-hero-top">
+          <div>
+            <div class="order-hero-title">Order Details</div>
+            <div class="order-hero-sub">
+              Placed on {{ order.orderDate | date: 'medium' }}
+            </div>
+          </div>
+          <span class="pill"
+            [ngClass]="order.status === 'delivered' ? 'pill-delivered' :
+                       order.status === 'shipped' ? 'pill-shipped' :
+                       order.status === 'proccessing' ? 'pill-processing' :
+                       order.status === 'canceled' ? 'pill-cancelled' : 'pill-pending'">
+            {{ order.status | titlecase }}
+          </span>
+        </div>
+
+        <div class="order-hero-grid">
+          <div class="hero-metric">
+            <div class="hero-label">Subtotal</div>
+            <div class="hero-value">${{ order.subtotal ?? 0 }}</div>
+          </div>
+          <div class="hero-metric">
+            <div class="hero-label">Discount</div>
+            <div class="hero-value text-warning-siq">-${{ order.discountAmount ?? 0 }}</div>
+          </div>
+          <div class="hero-metric">
+            <div class="hero-label">Promo</div>
+            <div class="hero-value text-primary-siq">{{ order.promoCode || '—' }}</div>
+          </div>
+          <div class="hero-metric total">
+            <div class="hero-label">Total</div>
+            <div class="hero-value total">${{ order.totalAmount }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-vendors-list">
+      @for (vendor of order.vendors; track vendor.vendorId ?? vendor.vendorName) {
+        <section class="vendor-card card-siq">
+          <div class="vendor-header">
+            <div>
+              <div class="vendor-name">{{ vendor.vendorName }}</div>
+              <div class="vendor-meta">
+                <span class="muted-text">Items: {{ vendor.totalQuantity }}</span>
+                <span class="muted-text"> • </span>
+                <span class="muted-text">Subtotal: ${{ vendor.vendorSubtotal }}</span>
+              </div>
+            </div>
+            <div class="vendor-actions">
+              <button type="button" class="btn-outline-siq" (click)="onTrackVendor(vendor)">
+                Track order
+              </button>
+            </div>
+          </div>
+
+          <div class="vendor-body">
+            <div class="vendor-status">
+              <span class="muted-text">Shipment status</span>
+              <span class="pill"
+                [ngClass]="vendor.shippingStatus === 'delivered' ? 'pill-delivered' :
+                           vendor.shippingStatus === 'outfordelivery' ? 'pill-shipped' :
+                           vendor.shippingStatus === 'preparing' ? 'pill-processing' :
+                           vendor.shippingStatus === 'canceled' ? 'pill-cancelled' : 'pill-processing'">
+                {{ (vendor.shippingStatus || 'preparing') | titlecase }}
+              </span>
+            </div>
+
+            <div class="products-grid">
+              @for (item of vendor.items; track item.productId) {
+                <div class="product-card-mini">
+                  <div class="product-thumb">
+                    <img
+                      [src]="item.productImage || 'assets/images/logo.png'"
+                      alt="Product"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  <div class="product-body">
+                    <div class="product-title">{{ item.productName }}</div>
+                    <div class="product-meta muted-text">
+                      ${{ item.price }} × {{ item.quantity }}
+                    </div>
+                  </div>
+
+                  <div class="product-total">
+                    <div class="muted-text">Amount</div>
+                    <div class="product-total-value">
+                      ${{ item.lineTotal ?? (item.price * item.quantity) }}
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </section>
+      }
+    </div>
+  }
+</div>
