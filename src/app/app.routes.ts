@@ -13,6 +13,7 @@ import { ConfirmOrder } from './components/features/customer/confirm-order/confi
 import { UserOrders } from './components/features/customer/user-orders/user-orders';
 import { OrderDetails } from './components/features/customer/order-details/order-details';
 import { TrackOrder } from './components/features/customer/track-order/track-order';
+import { Cart } from './components/features/customer/cart/cart';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: 'products/:id', component: ProductDetails, title: 'Product Details' },
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
       { path: 'products/edit/:id', component: AddProduct, title: 'Edit Product' },
+      { path: 'cart', component: Cart, title: 'Cart' },
       { path: 'confirm-order', component: ConfirmOrder, title: 'Confirm Order' },
       { path: 'user-orders', component: UserOrders, title: 'My Orders' },
       { path: 'user-orders/:id', component: OrderDetails, title: 'Order Details' },

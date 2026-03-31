@@ -17,7 +17,8 @@ export class CartService {
   private headers() {
     const sessionId = localStorage.getItem('x-session-id');
     const token = localStorage.getItem('token');
-    let headers: any = { 'X-Session-Id': sessionId };
+    const headers: Record<string, string> = {};
+    if (sessionId) headers['X-Session-Id'] = sessionId;
     if (token) {
       headers['authorization'] = `Bearer ${token}`;
     }
@@ -41,7 +42,7 @@ export class CartService {
   }
 
   isItemInCart(productId: string): Observable<any> {
-    return this.httpClient.get(`${this.apiUrl}/is-item-in-cart`, { params: { productId }, 'headers': this.headers() })
+    return this.httpClient.get(`${this.apiUrl}/is-item-in-cart/${productId}`, { 'headers': this.headers() })
   }
 
   getRecipet(): Observable<any> {

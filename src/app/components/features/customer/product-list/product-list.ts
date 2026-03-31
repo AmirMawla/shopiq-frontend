@@ -35,6 +35,29 @@ export class ProductList implements OnInit {
     this.loadProducts();
   }
 
+  applyFilters(): void {
+    const hasSearch = !!this.searchQuery?.trim();
+    const hasCategory = !!this.selectedCategoryId;
+    const hasMaxPrice = !!this.maxPrice && this.maxPrice > 0;
+
+    if (hasSearch) {
+      this.loadProductsRequest(this.productService.searchProducts(this.searchQuery.trim()));
+      return;
+    }
+
+    if (hasCategory) {
+      this.loadProductsRequest(this.productService.getProductsByCatId(this.selectedCategoryId));
+      return;
+    }
+
+    if (hasMaxPrice) {
+      this.loadProductsRequest(this.productService.getProductsByPrice(this.maxPrice));
+      return;
+    }
+
+    this.loadProductsRequest(this.productService.getAllProducts());
+  }
+
   private loadCategories(): void {
     this.categoryService.getAllCategories().subscribe({
       next: (res) => {
