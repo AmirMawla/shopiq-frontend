@@ -9,15 +9,13 @@
       <div class="col-md-5">
         <label class="form-label-siq">Search</label>
         <div class="topbar-search w-100">
-          <!-- <span>🔍</span> -->
-          <input type="text" placeholder="Search products..."
-            [(ngModel)]="searchQuery" (input)="searchProducts()"/>
+
+          <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" (input)="applyFilters()" />
         </div>
       </div>
       <div class="col-md-4">
         <label class="form-label-siq">Category</label>
-        <select class="form-input-siq" [(ngModel)]="selectedCategoryId"
-          (change)="filterByCategory(selectedCategoryId)">
+        <select class="form-input-siq" [(ngModel)]="selectedCategoryId" (change)="applyFilters()">
           <option value="">All Categories</option>
           @for(cat of categories; track cat._id){
             <option [value]="cat._id">{{ cat.name }}</option>
@@ -26,8 +24,7 @@
       </div>
       <div class="col-md-3">
         <label class="form-label-siq">Max Price</label>
-        <input type="number" class="form-input-siq" placeholder="Max price"
-          [(ngModel)]="maxPrice" (input)="filterByPrice()"/>
+          <input type="number" class="form-input-siq" placeholder="Max price" [(ngModel)]="maxPrice" (input)="applyFilters()"/>
       </div>
     </div>
   </div>
@@ -47,12 +44,12 @@
               } @else if(p.stock <= 5){
                 <span class="pill pill-processing">Almost Out</span>
               } @else {
-                <span class="pill pill-active">In Stock</span>
+              <span class="pill pill-active">In Stock</span>
               }
-            </div>
           </div>
         </div>
       </div>
+    </div>
     }
 
     @empty {

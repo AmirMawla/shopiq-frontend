@@ -1,24 +1,23 @@
-<!-- <p>product-details works!</p> -->
+
 <div class="container-fluid px-4 py-4">
 
-  <!-- <button class="btn-ghost-siq mb-4" (click)="goBack()">
+  <button class="btn-ghost-siq mb-4" (click)="goBack()">
     ← Back to Products
-  </button> -->
+  </button>
 
   @if(product){
   <div class="row g-4">
 
     <div class="col-md-5">
       <div class="card-siq p-0" style="overflow: hidden;">
-        <img [src]="product.imageUrl" class="w-100"
-          style="aspect-ratio: 4/3; object-fit: cover;">
+        <img [src]="product.imageUrl" class="w-100" style="aspect-ratio: 4/3; object-fit: cover;">
       </div>
     </div>
 
     <div class="col-md-7">
       <div class="card-siq h-100">
         <!-- <p class="product-card-category">{{ product.categoryId?.name }}</p> -->
-       <p class="product-card-category">{{ $any(product.categoryId)?.name }}</p>
+        <p class="product-card-category">{{ $any(product.categoryId)?.name }}</p>
         <h2 class="page-title">{{ product.name }}</h2>
         <div class="divider"></div>
         <p class="text-muted-siq mb-4">{{ product.description }}</p>
@@ -28,18 +27,18 @@
             ${{ product.price }}
           </span>
           @if(product.stock == 0){
-            <span class="pill pill-cancelled">Out of Stock</span>
-          } @else if(product.stock <= 5){
-            <span class="pill pill-processing">⚠️ Almost Out: {{ product.stock }} left</span>
-          } @else {
+          <span class="pill pill-cancelled">Out of Stock</span>
+          } @else if(product.stock <= 5){ <span class="pill pill-processing">⚠️ Almost Out: {{ product.stock }}
+            left</span>
+            } @else {
             <span class="pill pill-active">✅ In Stock: {{ product.stock }}</span>
-          }
+            }
         </div>
 
         <div class="divider"></div>
 
-        <button class="btn-siq w-100" [disabled]="product.stock == 0">
-          🛒 Add to Cart
+        <button class="btn-siq w-100" [disabled]="product.stock == 0 || isInCart" (click)="addToCart(product._id!)">
+          {{ isInCart ? '✅ Added to Cart' : '🛒 Add to Cart' }}
         </button>
 
       </div>

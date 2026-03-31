@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import{Product} from '../../../../models/product';
+import { Product } from '../../../../models/product';
 import { Category } from '../../../../models/category';
 import { ProductService } from '../../../../services/product';
 import { CategoriesS} from '../../../../services/category';
@@ -28,7 +28,7 @@ export class ProductList implements OnInit {
 
   selectedCategoryId: string = '';
   searchQuery: string = '';
-  maxPrice: number = 0
+  maxPrice: number = 0;
 
   ngOnInit(): void {
     this.loadCategories();

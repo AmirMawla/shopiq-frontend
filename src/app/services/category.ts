@@ -1,7 +1,7 @@
 import { inject, Injectable} from '@angular/core';
 import{Category} from '../models/category'
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface CategoryResponse {
