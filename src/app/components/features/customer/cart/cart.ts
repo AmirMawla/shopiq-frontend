@@ -33,7 +33,6 @@ export class Cart implements OnInit, OnDestroy {
         this.loadCart();
       });
 
-    // Load cart now (initial load)
     this.loadCart();
   }
 
