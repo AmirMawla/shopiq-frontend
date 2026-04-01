@@ -20,6 +20,7 @@ export class ProductDetails implements OnInit {
   private cartService = inject(CartService);
   private cdr = inject(ChangeDetectorRef);
 
+  isFavorited = false;
   product: Product | null = null;
   loading = true;
   isInCart = false;
@@ -43,6 +44,7 @@ export class ProductDetails implements OnInit {
         const productId = this.product?._id;
         if (productId) {
           this.loadReviews(productId);
+          this.checkFavoriteStatus(productId);
           const token = localStorage.getItem('token');
           if (token) {
             this.cartService.isItemInCart(productId).subscribe({
@@ -62,6 +64,26 @@ export class ProductDetails implements OnInit {
       error: () => {
         this.product = null;
         this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  checkFavoriteStatus(productId: string) {
+    this.apiProductsSErvice.getMyFavorites().subscribe({
+      next: (res) => {
+        const favs = res.data || [];
+        this.isFavorited = favs.some((f: any) => f.productId?._id === productId);
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  toggleFavorite() {
+    if (!this.product?._id) return;
+    this.apiProductsSErvice.toggleFavorite(this.product._id).subscribe({
+      next: (res) => {
+        this.isFavorited = res.data.isFavorited;
         this.cdr.detectChanges();
       },
     });

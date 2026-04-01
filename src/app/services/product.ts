@@ -33,6 +33,7 @@ export class ProductService {
   private httpClient = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/products`;
   private reviewsUrl = `${environment.apiUrl}/reviews`;
+  private favoriteUrl = `${environment.apiUrl}/favourites`;
 
   private getHeaders() {
     return new HttpHeaders({
@@ -82,6 +83,22 @@ export class ProductService {
     comment: string;
   }): Observable<SingleReviewResponse> {
     return this.httpClient.post<SingleReviewResponse>(this.reviewsUrl, reviewData, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  toggleFavorite(productId: string): Observable<any> {
+    return this.httpClient.post(
+      `${this.favoriteUrl}/toggle`,
+      { productId },
+      {
+        headers: this.getHeaders(),
+      },
+    );
+  }
+
+  getMyFavorites(): Observable<any> {
+    return this.httpClient.get(this.favoriteUrl, {
       headers: this.getHeaders(),
     });
   }
