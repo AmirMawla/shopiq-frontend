@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AdminService } from '../../../../services/admin';
 import { FormsModule } from '@angular/forms';
 
@@ -7,11 +7,11 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './banners.html',
-  styleUrl: './banners.css'
+  styleUrl: './banners.css',
 })
 export class Banners {
   private adminService = inject(AdminService);
-
+  private cdr = inject(ChangeDetectorRef);
   banners: any[] = [];
   loading = true;
   error = '';
@@ -22,7 +22,7 @@ export class Banners {
     imageUrl: '',
     link: '',
     order: 0,
-    isActive: true
+    isActive: true,
   };
 
   constructor() {
@@ -35,11 +35,13 @@ export class Banners {
       next: (res: any) => {
         this.banners = res.data;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.error = 'Failed to load banners';
         this.loading = false;
-      }
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -51,17 +53,18 @@ export class Banners {
         this.showForm = false;
         this.loadBanners();
       },
-      error: (err: any) => alert('Failed to create banner')
+      error: (err: any) => alert('Failed to create banner'),
     });
   }
 
   toggleBanner(id: string) {
     this.adminService.toggleBanner(id).subscribe({
       next: () => {
-        const banner = this.banners.find(b => b._id === id);
+        const banner = this.banners.find((b) => b._id === id);
         if (banner) banner.isActive = !banner.isActive;
+        this.cdr.detectChanges();
       },
-      error: (err: any) => alert('Failed to toggle banner')
+      error: (err: any) => alert('Failed to toggle banner'),
     });
   }
 
@@ -69,7 +72,7 @@ export class Banners {
     if (confirm('Are you sure you want to delete this banner?')) {
       this.adminService.deleteBanner(id).subscribe({
         next: () => this.loadBanners(),
-        error: (err: any) => alert('Failed to delete banner')
+        error: (err: any) => alert('Failed to delete banner'),
       });
     }
   }

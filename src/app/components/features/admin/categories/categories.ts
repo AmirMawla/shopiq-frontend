@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AdminService } from '../../../../services/admin';
 import { FormsModule } from '@angular/forms';
 
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class Categories {
   private adminService = inject(AdminService);
-
+private cdr = inject(ChangeDetectorRef);
   categories: any[] = [];
   loading = true;
   error = '';
@@ -28,10 +28,12 @@ export class Categories {
       next: (res: any) => {
         this.categories = res.data;
         this.loading = false;
+this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.error = 'Failed to load categories';
         this.loading = false;
+this.cdr.detectChanges();
       }
     });
   }
@@ -43,6 +45,7 @@ export class Categories {
         this.newCategoryName = '';
         this.showForm = false;
         this.loadCategories();
+this.cdr.detectChanges();
       },
       error: (err: any) => alert('Failed to create category')
     });

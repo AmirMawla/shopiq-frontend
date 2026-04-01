@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AdminService } from '../../../../services/admin';
 
 @Component({
@@ -10,7 +10,7 @@ import { AdminService } from '../../../../services/admin';
 })
 export class Products {
   private adminService = inject(AdminService);
-
+private cdr = inject(ChangeDetectorRef);
   products: any[] = [];
   loading = true;
   error = '';
@@ -25,10 +25,12 @@ export class Products {
       next: (res: any) => {
         this.products = res.data;
         this.loading = false;
+this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.error = 'Failed to load products';
         this.loading = false;
+this.cdr.detectChanges();
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AdminService } from '../../../../services/admin';
 import { FormsModule } from '@angular/forms';
 
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class Users {
   private adminService = inject(AdminService);
-
+private cdr = inject(ChangeDetectorRef);
   users: any[] = [];
   pendingSellers: any[] = [];
   loading = true;
@@ -28,10 +28,12 @@ export class Users {
       next: (res: any) => {
         this.users = res.data;
         this.loading = false;
+this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.error = 'Failed to load users';
         this.loading = false;
+this.cdr.detectChanges();
       }
     });
   }
@@ -40,6 +42,7 @@ export class Users {
     this.adminService.getPendingSellers().subscribe({
       next: (res: any) => {
         this.pendingSellers = res.data;
+this.cdr.detectChanges();
       },
       error: (err: any) => console.log(err)
     });
@@ -51,6 +54,7 @@ export class Users {
         const user = this.users.find(u => u._id === id);
         if (user) {
           user.isRestricted = !user.isRestricted;
+this.cdr.detectChanges();
         }
       },
       error: (err: any) => alert('Failed to update user')
