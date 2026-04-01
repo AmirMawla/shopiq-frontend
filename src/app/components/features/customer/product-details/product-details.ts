@@ -12,7 +12,7 @@ import { CartService } from '../../../../services/cart';
   styleUrl: './product-details.css',
 })
 export class ProductDetails implements OnInit {
- private activatedRoute = inject(ActivatedRoute);
+  private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private apiProductsSErvice = inject(ProductService)
   private cartService = inject(CartService);
@@ -32,7 +32,9 @@ export class ProductDetails implements OnInit {
 
         const productId = this.product?._id;
         if (productId) {
-          this.cartService.isItemInCart(productId).subscribe({
+          const token = localStorage.getItem('token');
+          if (token) { 
+            this.cartService.isItemInCart(productId).subscribe({
             next: (r) => {
               this.isInCart = !!(r as any)?.isExist;
               this.cdr.detectChanges();
@@ -43,12 +45,15 @@ export class ProductDetails implements OnInit {
             },
           });
         }
-      },
-      error: () => {
-        this.product = null;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
+      }
+    
+        },
+      
+        error: () => {
+          this.product = null;
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
     });
   }
 
