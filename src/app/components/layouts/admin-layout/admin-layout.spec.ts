@@ -1,17 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
-import { AdminLayout } from './admin-layout';
+import { AdminLayoutComponent } from './admin-layout';
+import { AuthService } from '../../../services/auth.service';
 
-describe('AdminLayout', () => {
-  let component: AdminLayout;
-  let fixture: ComponentFixture<AdminLayout>;
+describe('AdminLayoutComponent', () => {
+  let component: AdminLayoutComponent;
+  let fixture: ComponentFixture<AdminLayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminLayout],
+      imports: [AdminLayoutComponent],
+      providers: [
+        provideRouter([]),
+        {
+          provide: AuthService,
+          useValue: {
+            isLoggedIn: () => false,
+            currentUser: () => null,
+            logout: () => {},
+          },
+        },
+      ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AdminLayout);
+    fixture = TestBed.createComponent(AdminLayoutComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

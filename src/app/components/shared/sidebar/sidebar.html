@@ -30,16 +30,45 @@
     }
   </nav>
 
-  <!-- User info at bottom (placeholder) -->
+
+  @if (showUserFooter) {
   <div class="sb-bottom">
-    <div class="sb-avatar">U</div>
-    <div style="overflow: hidden;">
-      <div style="font-size:13px; color: var(--text-dark); font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-        User
+    @if (authService.isLoggedIn()) {
+      <div
+        class="sb-avatar-ring"
+        [class.sb-avatar-ring--seller]="authService.currentUser()?.role === 'seller'"
+        [class.sb-avatar-ring--admin]="authService.currentUser()?.role === 'admin'"
+        [class.sb-avatar-ring--user]="authService.currentUser()?.role !== 'seller' && authService.currentUser()?.role !== 'admin'"
+      >
+        @if (authService.currentUser()?.profilePicture?.url && !avatarImageFailed) {
+          <img
+            [src]="authService.currentUser()!.profilePicture!.url"
+            alt=""
+            class="sb-avatar-photo"
+            (error)="onAvatarError()"
+            loading="lazy"
+          />
+        } @else {
+          <span class="sb-avatar-initial" [ngClass]="avatarRoleClass()">{{ avatarLetter() }}</span>
+        }
       </div>
-      <div style="font-size:11px; color:#3A3A5C;">
-        Member
+      <div class="sb-user-meta">
+        <div class="sb-user-name">
+          @if (authService.currentUser()?.role === 'seller') {
+            {{ authService.currentUser()?.sellerProfile?.storeName || authService.currentUser()?.name }}
+          } @else {
+            {{ authService.currentUser()?.name }}
+          }
+        </div>
+        <div class="sb-user-role">
+          @switch (authService.currentUser()?.role) {
+            @case ('seller') { Seller }
+            @case ('admin') { Admin }
+            @default { Member }
+          }
+        </div>
       </div>
-    </div>
+    }
   </div>
+  }
 </div>

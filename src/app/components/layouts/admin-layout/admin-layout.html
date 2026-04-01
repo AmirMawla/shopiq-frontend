@@ -1,22 +1,57 @@
 <div class="dashboard-shell">
-  <app-sidebar [sections]="adminSections" />
+  <app-sidebar [sections]="adminSections" [showUserFooter]="false" />
   <div class="dashboard-main">
-    <div class="dashboard-topbar">
+    <div class="dashboard-topbar admin-topbar">
       <span class="topbar-breadcrumb">ShopIQ / <strong>{{ pageTitle }}</strong></span>
       <div class="topbar-search">
         <i class="fa-solid fa-magnifying-glass" style="color: var(--muted); font-size:13px;"></i>
         <input type="text" placeholder="Search..." />
       </div>
-      <div style="margin-left: auto; display:flex; gap:8px; align-items:center;">
+      <div class="admin-topbar-actions">
         <button class="topbar-icon-btn" type="button" aria-label="Notifications">
           <i class="fa-regular fa-bell"></i>
-        </button>
-        <button class="topbar-icon-btn" type="button" aria-label="Settings">
-          <i class="fa-solid fa-gear"></i>
         </button>
         <a routerLink="/admin/products/new" class="btn-siq">
           <i class="fa-solid fa-plus"></i> Add Product
         </a>
+
+        @if (authService.isLoggedIn()) {
+          <div class="admin-user-wrap">
+            <button
+              type="button"
+              class="admin-user-btn"
+              (click)="toggleUserMenu()"
+              aria-haspopup="true"
+              [attr.aria-expanded]="userMenuOpen()"
+            >
+              <div class="admin-avatar-ring">
+                @if (authService.currentUser()?.profilePicture?.url && !avatarImageFailed) {
+                  <img
+                    [src]="authService.currentUser()!.profilePicture!.url"
+                    alt=""
+                    class="admin-avatar-photo"
+                    (error)="onAvatarError()"
+                    loading="lazy"
+                  />
+                } @else {
+                  <span class="admin-avatar-initial">A</span>
+                }
+              </div>
+              <span class="admin-display-name" [title]="adminDisplayName()">{{ adminDisplayName() }}</span>
+              <i class="fa-solid fa-chevron-down admin-chevron" [class.admin-chevron--open]="userMenuOpen()"></i>
+            </button>
+
+            <div class="admin-dropdown dropdown-menu-siq" [class.user-dropdown-active]="userMenuOpen()">
+              <a routerLink="/account/profile" (click)="closeUserMenu()" class="admin-dropdown-link">
+                <i class="fa-solid fa-gear"></i>
+                Settings
+              </a>
+              <button type="button" class="admin-dropdown-link admin-dropdown-logout" (click)="handleLogout()">
+                Logout
+              </button>
+            </div>
+          </div>
+        }
       </div>
     </div>
     <div class="dashboard-content">

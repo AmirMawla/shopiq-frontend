@@ -1,1 +1,47 @@
-<p>seller-layout works!</p>
+<div class="dashboard-shell">
+  <app-sidebar [sections]="sellerSections" [showUserFooter]="false" />
+  <div class="dashboard-main">
+    <div class="dashboard-topbar seller-topbar">
+      <span class="seller-breadcrumb">
+        ShopIQ / <strong>Seller Panel</strong>
+      </span>
+
+      <div class="seller-topbar-right">
+        @if (authService.isLoggedIn()) {
+          <div class="seller-user-wrap">
+            <button type="button" class="seller-user-btn" (click)="toggleUserMenu()" aria-haspopup="true" [attr.aria-expanded]="userMenuOpen()">
+              <div class="seller-avatar-ring">
+                @if (authService.currentUser()?.profilePicture?.url && !avatarImageFailed) {
+                  <img
+                    [src]="authService.currentUser()!.profilePicture!.url"
+                    alt=""
+                    class="seller-avatar-photo"
+                    (error)="onAvatarError()"
+                    loading="lazy"
+                  />
+                } @else {
+                  <span class="seller-avatar-initial">S</span>
+                }
+              </div>
+              <span class="seller-store-name" [title]="sellerDisplayName()">{{ sellerDisplayName() }}</span>
+              <i class="fa-solid fa-chevron-down seller-chevron" [class.seller-chevron--open]="userMenuOpen()"></i>
+            </button>
+
+            <div class="seller-dropdown dropdown-menu-siq" [class.user-dropdown-active]="userMenuOpen()">
+              <a routerLink="/seller/profile" (click)="closeUserMenu()" class="seller-dropdown-link">
+                <i class="fa-solid fa-gear"></i>
+                Settings
+              </a>
+              <button type="button" class="seller-dropdown-link seller-dropdown-logout" (click)="handleLogout()">
+                Logout
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="dashboard-content">
+      <router-outlet />
+    </div>
+  </div>
+</div>

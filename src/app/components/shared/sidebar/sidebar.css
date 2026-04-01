@@ -1,0 +1,98 @@
+/* Bottom user block — avatar + text */
+.sb-bottom {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-top: 0.5px solid var(--border-dark);
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.sb-avatar-ring {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  padding: 2px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, rgba(124, 110, 245, 0.55), rgba(124, 110, 245, 0.15));
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.sb-avatar-ring--seller {
+  background: linear-gradient(145deg, rgba(34, 199, 138, 0.6), rgba(34, 199, 138, 0.2));
+}
+
+.sb-avatar-ring--admin {
+  background: linear-gradient(145deg, rgba(55, 138, 221, 0.55), rgba(55, 138, 221, 0.18));
+}
+
+.sb-avatar-ring--user {
+  background: linear-gradient(145deg, rgba(124, 110, 245, 0.5), rgba(124, 110, 245, 0.15));
+}
+
+.sb-avatar-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  border: 2px solid var(--sidebar);
+  background: var(--sidebar-active);
+}
+
+.sb-avatar-initial {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-dark);
+  border: 2px solid var(--sidebar);
+  background: var(--sidebar-active);
+}
+
+.sb-avatar-initial--seller {
+  background: linear-gradient(160deg, rgba(34, 199, 138, 0.35), var(--sidebar-active));
+  color: #b8f5df;
+}
+
+.sb-avatar-initial--admin {
+  background: linear-gradient(160deg, rgba(55, 138, 221, 0.35), var(--sidebar-active));
+  color: #c5e4ff;
+}
+
+.sb-avatar-initial--user {
+  background: linear-gradient(160deg, rgba(124, 110, 245, 0.35), var(--sidebar-active));
+  color: #d4ccff;
+}
+
+.sb-user-meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.sb-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.sb-user-role {
+  font-size: 11px;
+  color: #3a3a5c;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
