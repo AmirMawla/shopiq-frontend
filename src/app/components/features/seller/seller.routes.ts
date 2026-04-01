@@ -5,6 +5,8 @@ import { Dashboard } from './dashboard/dashboard';
 import { Profile } from './profile/profile';
 import { Products } from './products/products';
 import { LowStock,  } from './low-stock/low-stock';
+import { Orders } from './orders/orders';
+
 
 export const SELLER_ROUTES: Routes = [
   {
@@ -16,6 +18,7 @@ export const SELLER_ROUTES: Routes = [
       { path: 'dashboard', component: Dashboard, title: 'Seller Dashboard' },
       { path: 'profile', component: Profile, title: 'My Profile' },
       { path: 'products', component: Products, title: 'My Products' },
+      { path: 'orders', component: Orders, title: 'My Orders' },
       { path: 'low-stock', component: LowStock, title: 'Low Stock' },
     ]
   }
