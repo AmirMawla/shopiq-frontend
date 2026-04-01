@@ -35,7 +35,6 @@ export class Cart {
     this.CartService.updateQuantity(productId, quantity).subscribe({
       next: (response) => {
         this.cartdata = response.data;
-        //this.loadCart();
       },
       error: (error) => {
         console.error('Error updating cart item', error);
