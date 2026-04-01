@@ -7,7 +7,7 @@ import { CategoriesS} from '../../../../services/category';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
-
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-product-list',
   standalone: true,
@@ -20,6 +20,7 @@ export class ProductList implements OnInit {
   private categoryService = inject(CategoriesS);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private activatedRoute = inject(ActivatedRoute);
 
   products: Product[] = [];
   categories: Category[] = [];
@@ -33,6 +34,12 @@ export class ProductList implements OnInit {
   ngOnInit(): void {
     this.loadCategories();
     this.loadProducts();
+    this.activatedRoute.queryParams.subscribe(params => {
+    if (params['categoryId']) {
+      this.selectedCategoryId = params['categoryId'];
+      this.filterByCategory(this.selectedCategoryId);
+    }
+  });
   }
 
   applyFilters(): void {
