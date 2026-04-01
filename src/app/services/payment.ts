@@ -35,28 +35,28 @@ export class PaymentService {
     return headers;
   }
 
-  // GET /payments/transactions/count
+ 
   getTransactionsCount(): Observable<ApiResponse<TransactionsCountResponse>> {
     return this.httpClient.get<ApiResponse<TransactionsCountResponse>>(`${this.apiUrl}/transactions/count`, {
       headers: this.headers() as any,
     });
   }
 
-  // GET /payments/stats
+
   getPaymentStats(): Observable<ApiResponse<PaymentStatsResponse>> {
     return this.httpClient.get<ApiResponse<PaymentStatsResponse>>(`${this.apiUrl}/stats`, {
       headers: this.headers() as any,
     });
   }
 
-  // GET /payments/revenue/by-payment-method
+
   getAllRevenueByPaymentMethod(): Observable<ApiResponse<RevenueByPaymentMethodRow[]>> {
     return this.httpClient.get<ApiResponse<RevenueByPaymentMethodRow[]>>(`${this.apiUrl}/revenue/by-payment-method`, {
       headers: this.headers() as any,
     });
   }
 
-  // GET /payments/revenue/vendor/by-payment-method
+
   getVendorRevenueByPaymentMethod(): Observable<ApiResponse<RevenueByPaymentMethodRow[]>> {
     return this.httpClient.get<ApiResponse<RevenueByPaymentMethodRow[]>>(
       `${this.apiUrl}/revenue/vendor/by-payment-method`,
@@ -64,7 +64,7 @@ export class PaymentService {
     );
   }
 
-  // GET /payments/transactions
+
   getAllTransactions(query: TransactionListQuery = {}): Observable<ApiResponse<PagedResult<TransactionRow>>> {
     return this.httpClient.get<ApiResponse<PagedResult<TransactionRow>>>(`${this.apiUrl}/transactions`, {
       params: query as any,
@@ -72,7 +72,7 @@ export class PaymentService {
     });
   }
 
-  // GET /payments/vendor/transactions
+
   getVendorTransactions(query: VendorTransactionsQuery = {}): Observable<ApiResponse<PagedResult<VendorTransactionRow>>> {
     return this.httpClient.get<ApiResponse<PagedResult<VendorTransactionRow>>>(`${this.apiUrl}/vendor/transactions`, {
       params: query as any,
@@ -80,7 +80,7 @@ export class PaymentService {
     });
   }
 
-  // GET /payments/user/transactions
+
   getUserTransactions(query: UserTransactionsQuery = {}): Observable<ApiResponse<PagedResult<TransactionRow>>> {
     return this.httpClient.get<ApiResponse<PagedResult<TransactionRow>>>(`${this.apiUrl}/user/transactions`, {
       params: query as any,

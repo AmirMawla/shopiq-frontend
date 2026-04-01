@@ -6,6 +6,7 @@ import { SellerLayoutComponent } from './components/layouts/seller-layout/seller
 import { ProductList } from './components/features/customer/product-list/product-list';
 import { ProductDetails } from './components/features/customer/product-details/product-details';
 import { AddProduct } from './components/features/customer/add-product/add-product';
+import { Cart } from './components/features/customer/cart/cart';
 import { LoginComponent } from './components/features/auth/login/login';
 import { SignupComponent } from './components/features/auth/signup/signup';
 import { LoginSuccessComponent } from './components/features/auth/login-success/login-success';
@@ -15,12 +16,13 @@ import { ConfirmOrder } from './components/features/customer/confirm-order/confi
 import { UserOrders } from './components/features/customer/user-orders/user-orders';
 import { OrderDetails } from './components/features/customer/order-details/order-details';
 import { TrackOrder } from './components/features/customer/track-order/track-order';
-import { Cart } from './components/features/customer/cart/cart';
 import { Home } from './components/features/customer/home/home';
 import { ADMIN_ROUTES } from './components/features/admin/admin.routes';
 import { SELLER_ROUTES } from './components/features/seller/seller.routes';
 import { authGuard } from './guards/auth-guard';
 import { roleGuard } from './guards/role-guard';
+import { EditUserDetails } from './components/features/user/edit-user-details/edit-user-details';
+import { ApplySeller } from './components/features/user/apply-seller/apply-seller';
 
 export const routes: Routes = [
   {
@@ -35,14 +37,18 @@ export const routes: Routes = [
       { path: 'products/:id', component: ProductDetails, title: 'Product Details' },
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
       { path: 'products/edit/:id', component: AddProduct, title: 'Edit Product' },
-      { path: 'cart', component: Cart, title: 'Cart' },
+      { path: 'cart', component: Cart, title: 'Shopping Cart' },
+      //{ path: 'cart', component: Cart, title: 'Cart' },
       { path: 'confirm-order', component: ConfirmOrder, title: 'Confirm Order' },
       { path: 'user-orders', component: UserOrders, title: 'My Orders' },
       { path: 'user-orders/:id', component: OrderDetails, title: 'Order Details' },
       { path: 'track-order/:orderId/:vendorId', component: TrackOrder, title: 'Track Order' },
       { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
+      { path: 'account/profile/edit', component: EditUserDetails, title: 'Edit Profile' },
+      { path: 'seller/apply', component: ApplySeller, title: 'Join us as a seller' },
     ],
   },
+
   {
     path: 'auth',
     component: AuthLayoutComponent,

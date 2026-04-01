@@ -1,1 +1,422 @@
-<p>dashboard works!</p>
+<div class="dash-wrap">
+  <div class="dash-top">
+    <div class="dash-title">
+      <div class="dash-title-main">Admin Dashboard</div>
+      <div class="dash-title-sub">System overview, revenue, orders, and approvals.</div>
+    </div>
+
+    <div class="dash-actions">
+      <button class="btn-ghost-siq dash-btn" type="button" (click)="refresh()">
+        <i class="fa-solid fa-rotate"></i>
+        Refresh
+      </button>
+      <button class="btn-ghost-siq dash-btn" type="button" (click)="export('csv')">
+        <i class="fa-solid fa-file-csv"></i>
+        Export
+      </button>
+    </div>
+  </div>
+
+  @if (error) {
+    <div class="dash-alert">
+      <div class="dash-alert-title">Something went wrong</div>
+      <div class="dash-alert-body">{{ error }}</div>
+    </div>
+  }
+
+  <!-- Stat cards -->
+  <div class="stats-grid">
+    <div class="stat-card-siq purple">
+      <div class="stat-head">
+        <div class="stat-icon purple"><i class="fa-solid fa-sack-dollar"></i></div>
+        <div class="stat-meta">
+          <div class="stat-label">TOTAL REVENUE</div>
+          <div class="stat-num">{{ stats ? fmtMoney(stats.totalRevenue) : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-foot">
+        <span class="trend-pill" [class]="stats ? trendClass(stats.revenueGrowthPercent) : 'trend flat'">
+          {{ stats ? fmtPct(stats.revenueGrowthPercent) : '—' }}
+        </span>
+        <span class="stat-foot-muted">vs last month</span>
+      </div>
+    </div>
+
+    <div class="stat-card-siq green">
+      <div class="stat-head">
+        <div class="stat-icon green"><i class="fa-solid fa-bag-shopping"></i></div>
+        <div class="stat-meta">
+          <div class="stat-label">TOTAL ORDERS</div>
+          <div class="stat-num">{{ stats ? (stats.totalOrders | number) : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-foot">
+        <span class="trend-pill" [class]="stats ? trendClass(stats.ordersGrowthPercent) : 'trend flat'">
+          {{ stats ? fmtPct(stats.ordersGrowthPercent) : '—' }}
+        </span>
+        <span class="stat-foot-muted">vs last month</span>
+      </div>
+    </div>
+
+    <div class="stat-card-siq blue">
+      <div class="stat-head">
+        <div class="stat-icon blue"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-meta">
+          <div class="stat-label">TOTAL USERS</div>
+          <div class="stat-num">{{ stats ? (stats.totalUsers | number) : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-foot">
+        <span class="stat-foot-muted">Today</span>
+        <span class="mini-badge">{{ stats ? (stats.newUsersToday | number) : '—' }}</span>
+        <span class="stat-foot-muted">This month</span>
+        <span class="mini-badge">{{ stats ? (stats.newUsersThisMonth | number) : '—' }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card-siq amber">
+      <div class="stat-head">
+        <div class="stat-icon amber"><i class="fa-solid fa-cube"></i></div>
+        <div class="stat-meta">
+          <div class="stat-label">TOTAL PRODUCTS</div>
+          <div class="stat-num">{{ stats ? (stats.totalProducts | number) : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-foot">
+        <span class="stat-foot-muted">New this month</span>
+        <span class="mini-badge">{{ stats ? (stats.newProductsThisMonth | number) : '—' }}</span>
+        <span class="trend-pill" [class]="stats ? trendClass(stats.productsGrowthPercent) : 'trend flat'">
+          {{ stats ? fmtPct(stats.productsGrowthPercent) : '—' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="stat-card-siq purple">
+      <div class="stat-head">
+        <div class="stat-icon purple"><i class="fa-solid fa-store"></i></div>
+        <div class="stat-meta">
+          <div class="stat-label">ACTIVE SELLERS</div>
+          <div class="stat-num">{{ stats ? (stats.totalSellers | number) : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-foot">
+        <span class="stat-foot-muted">Pending approvals</span>
+        <span class="mini-badge warn">{{ stats ? (stats.pendingSellerApprovals | number) : '—' }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card-siq green">
+      <div class="stat-head">
+        <div class="stat-icon green"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="stat-meta">
+          <div class="stat-label">AVG ORDER VALUE</div>
+          <div class="stat-num">{{ stats ? fmtMoney2(stats.avgOrderValue) : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-foot">
+        <span class="trend-pill" [class]="stats ? trendClass(stats.aovGrowthPercent) : 'trend flat'">
+          {{ stats ? fmtPct(stats.aovGrowthPercent) : '—' }}
+        </span>
+        <span class="stat-foot-muted">vs last month</span>
+      </div>
+    </div>
+
+    <div class="stat-card-siq red">
+      <div class="stat-head">
+        <div class="stat-icon red"><i class="fa-solid fa-ban"></i></div>
+        <div class="stat-meta">
+          <div class="stat-label">CANCELLED ORDERS</div>
+          <div class="stat-num">{{ stats ? (stats.cancelledOrders | number) : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-foot">
+        <span class="stat-foot-muted">Rate</span>
+        <span class="mini-badge danger">{{ stats ? (stats.cancellationRatePercent | number:'1.1-1') + '%' : '—' }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card-siq amber">
+      <div class="stat-head">
+        <div class="stat-icon amber"><i class="fa-solid fa-clock"></i></div>
+        <div class="stat-meta">
+          <div class="stat-label">PENDING APPROVALS</div>
+          <div class="stat-num">{{ stats ? (stats.pendingApprovals | number) : '—' }}</div>
+        </div>
+      </div>
+      <div class="stat-foot">
+        <span class="stat-foot-muted">Products + Sellers</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Monthly Revenue</div>
+        <div class="panel-sub">Last 6 months</div>
+      </div>
+
+      <div class="bar-shell">
+        @if (revenueMonthly.length === 0) {
+          <div class="empty-muted">No revenue data yet.</div>
+        } @else {
+          <div class="bars">
+            @for (h of barHeights(); track $index) {
+              <div class="bar-col">
+                <div class="bar" [style.height.%]="h"></div>
+              </div>
+            }
+          </div>
+          <div class="bar-labels">
+            @for (m of revenueMonthly; track (m.month + m.year)) {
+              <div class="bar-lbl">{{ m.month }}</div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Revenue by Payment Method</div>
+        <div class="panel-sub">Distribution</div>
+      </div>
+
+      <div class="donut-wrap">
+        @if (paymentMethods.length === 0) {
+          <div class="empty-muted">No payment data yet.</div>
+        } @else {
+          <div class="donut">
+            <svg viewBox="0 0 120 120" width="150" height="150">
+              <g transform="translate(60,60) rotate(-90)">
+                <circle r="44" cx="0" cy="0" fill="transparent" stroke="rgba(255,255,255,0.08)" stroke-width="16"></circle>
+                @for (seg of donutSegments(paymentMethods); track $index) {
+                  <circle
+                    r="44"
+                    cx="0"
+                    cy="0"
+                    fill="transparent"
+                    stroke-width="16"
+                    [attr.stroke]="['#7C6EF5','#22C78A','#F0A500','#378ADD','#E84040'][$index % 5]"
+                    [attr.stroke-dasharray]="seg.dash"
+                    [attr.stroke-dashoffset]="seg.offset"
+                    stroke-linecap="round"
+                  ></circle>
+                }
+              </g>
+            </svg>
+            <div class="donut-center">
+              <div class="donut-big">{{ stats ? fmtMoney(stats.totalRevenue) : '—' }}</div>
+              <div class="donut-sub">Total</div>
+            </div>
+          </div>
+
+          <div class="donut-legend">
+            @for (m of paymentMethods; track m.method) {
+              <div class="legend-row">
+                <span class="legend-dot" [style.background]="['#7C6EF5','#22C78A','#F0A500','#378ADD','#E84040'][$index % 5]"></span>
+                <span class="legend-name">{{ m.label }}</span>
+                <span class="legend-val">{{ m.percentage | number:'1.0-1' }}%</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Orders by Status</div>
+        <div class="panel-sub">Current distribution</div>
+      </div>
+
+      <div class="donut-wrap">
+        @if (ordersByStatus.length === 0) {
+          <div class="empty-muted">No orders yet.</div>
+        } @else {
+          <div class="donut">
+            <svg viewBox="0 0 120 120" width="150" height="150">
+              <g transform="translate(60,60) rotate(-90)">
+                <circle r="44" cx="0" cy="0" fill="transparent" stroke="rgba(255,255,255,0.08)" stroke-width="16"></circle>
+                @for (seg of donutSegments(ordersByStatusToPct()); track $index) {
+                  <circle
+                    r="44"
+                    cx="0"
+                    cy="0"
+                    fill="transparent"
+                    stroke-width="16"
+                    [attr.stroke]="['#22C78A','#7C6EF5','#F0A500','#378ADD','#E84040'][$index % 5]"
+                    [attr.stroke-dasharray]="seg.dash"
+                    [attr.stroke-dashoffset]="seg.offset"
+                    stroke-linecap="round"
+                  ></circle>
+                }
+              </g>
+            </svg>
+            <div class="donut-center">
+              <div class="donut-big">{{ stats ? (stats.totalOrders | number) : '—' }}</div>
+              <div class="donut-sub">Orders</div>
+            </div>
+          </div>
+
+          <div class="donut-legend">
+            @for (s of ordersByStatusToPct(); track s.status) {
+              <div class="legend-row">
+                <span class="legend-dot" [style.background]="['#22C78A','#7C6EF5','#F0A500','#378ADD','#E84040'][$index % 5]"></span>
+                <span class="legend-name">{{ s.status }}</span>
+                <span class="legend-val">{{ s.percentage | number:'1.0-1' }}%</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Orders per Day (Last 14 Days)</div>
+        <div class="panel-sub">Trend</div>
+      </div>
+
+      <div class="line-shell">
+        @if (ordersDaily.length === 0) {
+          <div class="empty-muted">No daily trend yet.</div>
+        } @else {
+          <svg class="line-svg" viewBox="0 0 520 170" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="rgba(124,110,245,0.35)"></stop>
+                <stop offset="100%" stop-color="rgba(124,110,245,0.03)"></stop>
+              </linearGradient>
+            </defs>
+            <polyline class="line-stroke" [attr.points]="linePoints()"></polyline>
+            <polyline class="line-fill" [attr.points]="linePoints() + ' 506,158 14,158'"></polyline>
+          </svg>
+          <div class="line-labels">
+            <span class="line-hint">14 days</span>
+            <span class="line-hint">Now</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Lists -->
+  <div class="grid-3">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Top Products</div>
+        <div class="panel-sub">by revenue</div>
+      </div>
+      <div class="rank-list">
+        @for (p of topProducts; track p.productId) {
+          <div class="rank-row">
+            <div class="rank-num">{{ p.rank }}</div>
+            <div class="rank-body">
+              <div class="rank-name">{{ p.name }}</div>
+              <div class="rank-sub">{{ p.category }} • {{ p.totalOrders }} sold</div>
+            </div>
+            <div class="rank-val">{{ fmtMoney(p.totalRevenue) }}</div>
+          </div>
+        } @empty {
+          <div class="empty-muted">No products yet.</div>
+        }
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Top Categories</div>
+        <div class="panel-sub">by revenue</div>
+      </div>
+      <div class="rank-list">
+        @for (c of topCategories; track c.categoryId) {
+          <div class="rank-row">
+            <div class="rank-num">{{ c.rank }}</div>
+            <div class="rank-body">
+              <div class="rank-name">{{ c.name }}</div>
+              <div class="progress">
+                <div class="progress-bar" [style.width.%]="topCategoryPct(c.totalRevenue)"></div>
+              </div>
+            </div>
+            <div class="rank-val">{{ fmtMoney(c.totalRevenue) }}</div>
+          </div>
+        } @empty {
+          <div class="empty-muted">No categories yet.</div>
+        }
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Top Sellers</div>
+        <div class="panel-sub">by earnings</div>
+      </div>
+      <div class="rank-list">
+        @for (s of topSellers; track s.sellerId) {
+          <div class="rank-row">
+            <div class="rank-num">{{ s.rank }}</div>
+            <div class="rank-body">
+              <div class="rank-name">{{ s.storeName }}</div>
+              <div class="rank-sub">{{ s.totalSales }} sales</div>
+            </div>
+            <div class="rank-val">{{ fmtMoney(s.totalEarnings) }}</div>
+          </div>
+        } @empty {
+          <div class="empty-muted">No sellers yet.</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Recent Orders</div>
+        <div class="panel-sub">latest</div>
+      </div>
+      <div class="mini-table">
+        @for (o of recentOrders; track o._id) {
+          <div class="mini-row">
+            <div class="mini-left">
+              <div class="mini-name">{{ o.userId?.name || 'Guest' }}</div>
+              <div class="mini-sub">{{ o.items?.[0]?.productName || '—' }} <span class="mini-dot">•</span> {{ o.totalAmount | number }}</div>
+            </div>
+            <div class="mini-right">
+              <span [class]="pillClass(o.status)">{{ o.status }}</span>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-muted">No orders yet.</div>
+        }
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Pending Approvals</div>
+        <div class="panel-sub">products + sellers</div>
+      </div>
+      <div class="mini-table">
+        @for (p of pendingApprovals; track p._id) {
+          <div class="mini-row">
+            <div class="mini-left">
+              <div class="mini-name">{{ p.name }}</div>
+              <div class="mini-sub">{{ p.type }} <span class="mini-dot">•</span> {{ p.seller?.storeName || p.seller?.name || '—' }}</div>
+            </div>
+            <div class="mini-right">
+              <button class="btn-ghost-siq dash-btn sm" type="button" disabled>Approve</button>
+              <button class="btn-ghost-siq dash-btn sm" type="button" disabled>Reject</button>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-muted">No pending approvals.</div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
