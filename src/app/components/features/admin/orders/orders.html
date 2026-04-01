@@ -1,0 +1,46 @@
+<div>
+  <div class="section-header">
+    <h2 class="page-title">Order Management</h2>
+  </div>
+
+  @if (loading) {
+    <div class="text-muted-siq">Loading orders...</div>
+  } @else if (error) {
+    <div class="text-danger-siq">{{ error }}</div>
+  } @else {
+    <div class="card-siq">
+      <table class="table-siq">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>paymentMethod</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders; track $index) { 
+            <tr>
+              <td>#{{ order.id ? order.id.slice(-6).toUpperCase() : 'N/A' }}</td>
+              <td>{{ order.userName  }}</td>
+              <td>${{ order.totalAmount }}</td>
+              <td>
+                <span [class]="
+                  order.status === 'delivered' ? 'pill pill-delivered' :
+                  order.status === 'shipped' ? 'pill pill-shipped' :
+                  order.status === 'cancelled' ? 'pill pill-cancelled' :
+                  'pill pill-pending'">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td>{{ order.paymentMethod }}</td>
+              <td>{{ order.orderDate}}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

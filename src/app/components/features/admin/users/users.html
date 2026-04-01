@@ -1,0 +1,82 @@
+<div>
+  <div class="section-header">
+    <h2 class="page-title">User Management</h2>
+  </div>
+
+  @if (loading) {
+    <div class="text-muted-siq">Loading users...</div>
+  } @else if (error) {
+    <div class="text-danger-siq">{{ error }}</div>
+  } @else {
+    <div class="card-siq" style="margin-bottom: 32px;">
+      <table class="table-siq">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users; track user._id) {
+            <tr>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.role }}</td>
+              <td>
+                <span [class]="user.isRestricted ? 'pill pill-restricted' : 'pill pill-active'">
+                  {{ user.isRestricted ? 'Restricted' : 'Active' }}
+                </span>
+              </td>
+              <td>
+                <button
+                  (click)="toggleRestriction(user._id)"
+                  [class]="user.isRestricted ? 'btn-siq' : 'btn-outline-siq'">
+                  {{ user.isRestricted ? 'Unrestrict' : 'Restrict' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-header">
+      <h2 class="page-title">Pending Seller Applications</h2>
+    </div>
+
+    @if (pendingSellers.length === 0) {
+      <p class="text-muted-siq">No pending applications</p>
+    } @else {
+      <div class="card-siq">
+        <table class="table-siq">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Store Name</th>
+              <th>Bio</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (seller of pendingSellers; track seller._id) {
+              <tr>
+                <td>{{ seller.name }}</td>
+                <td>{{ seller.email }}</td>
+                <td>{{ seller.sellerProfile?.storeName }}</td>
+                <td>{{ seller.sellerProfile?.bio }}</td>
+                <td style="display:flex; gap:8px;">
+                  <button class="btn-siq" (click)="decideSeller(seller._id, 'approve')">Approve</button>
+                  <button class="btn-outline-siq" (click)="decideSeller(seller._id, 'reject')">Reject</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</div>

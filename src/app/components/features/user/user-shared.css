@@ -1,0 +1,51 @@
+/* Container for the top-level success message */
+.success-message-siq {
+  background-color: #ecfdf5; /* Light emerald green */
+  color: var(--success);            /* Dark emerald green */
+  border: 1px solid var(--success-text);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Container for the top-level error message */
+.error-message-siq {
+  background-color: #fef2f2; /* Light red */
+  color: var(--danger);            /* Dark red */
+  border: 1px solid var(--danger-text);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Small validation text below specific input fields */
+.error-text-siq {
+  display: block;
+  color: var(--danger);            /* Bright red */
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  font-weight: 400;
+}
+
+/* Optional: Add a subtle fade-in animation for better UX */
+.success-message-siq, 
+.error-message-siq {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

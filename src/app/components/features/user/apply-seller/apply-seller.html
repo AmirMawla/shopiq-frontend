@@ -1,0 +1,42 @@
+<div class="apply-container animate-in">
+    <div class="card-siq">
+        <div class="form-header">
+            <a routerLink="/account/profile" class="back-link">← Back to Account</a>
+            <h2 class="page-title">Seller Application</h2>
+            <p class="subtitle">Tell us about your store to get started.</p>
+        </div>
+
+        @if (errorMessage()) {
+        <div class="alert-error-siq">{{ errorMessage() }}</div>
+        }
+
+        <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label class="info-label">Store Name</label>
+                <input type="text" formControlName="storeName" class="input-siq" placeholder="e.g. Amir's Tech Shop">
+                @if (applyForm.get('storeName')?.touched && applyForm.get('storeName')?.invalid) {
+                <small class="text-danger-siq">Store name must be 3-50 characters.</small>
+                }
+            </div>
+
+            <div class="form-group">
+                <label class="info-label">Store Bio / Description</label>
+                <textarea formControlName="bio" class="input-siq" rows="5"
+                    placeholder="What do you sell? Tell us about your business..."></textarea>
+                <div class="char-count">
+                    {{ applyForm.get('bio')?.value?.length || 0 }} / 500
+                </div>
+                @if (applyForm.get('bio')?.touched && applyForm.get('bio')?.invalid) {
+                <small class="text-danger-siq">Bio is required (max 500 characters).</small>
+                }
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-siq btn-outline" routerLink="/account/profile">Cancel</button>
+                <button type="submit" class="btn-siq" [disabled]="isSubmitting()">
+                    {{ isSubmitting() ? 'Submitting...' : 'Submit Application' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

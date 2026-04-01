@@ -2,7 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
-import {environment} from '../../environments/environment.development'
+import { environment } from '../../environments/environment.development';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -48,15 +48,10 @@ export class AuthService {
     return this.http.patch(`${this.baseUrl}/change-password`, data, { headers: this.getHeaders() });
   }
 
-  getMe() {
-    return this.http.get<any>(`${this.usersUrl}/me`, { headers: this.getHeaders() }).pipe(
-      tap((res: any) => {
-        if (res.success && res.data) {
-          this.userState.set(res.data);
-          localStorage.setItem('user', JSON.stringify(res.data));
-        }
-      }),
-    );
+  // Helper for UserService to update global state
+  updateUserState(userData: any) {
+    this.userState.set(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
   }
 
   googleLogin() {
