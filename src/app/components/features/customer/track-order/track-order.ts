@@ -60,7 +60,6 @@ export class TrackOrder implements OnInit {
     if (status === 'canceled' || status === 'returned') return -1;
     if (status === 'delivered') return 4;
     if (status === 'outfordelivery') return 3;
-    // backend has "preparing" → map to "processing" step
     return 1;
   }
 
