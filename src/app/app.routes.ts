@@ -16,17 +16,23 @@ import { ConfirmOrder } from './components/features/customer/confirm-order/confi
 import { UserOrders } from './components/features/customer/user-orders/user-orders';
 import { OrderDetails } from './components/features/customer/order-details/order-details';
 import { TrackOrder } from './components/features/customer/track-order/track-order';
+import { Home } from './components/features/customer/home/home';
 import { ADMIN_ROUTES } from './components/features/admin/admin.routes';
 import { SELLER_ROUTES } from './components/features/seller/seller.routes';
 import { authGuard } from './guards/auth-guard';
 import { roleGuard } from './guards/role-guard';
+import { EditUserDetails } from './components/features/user/edit-user-details/edit-user-details';
+import { ApplySeller } from './components/features/user/apply-seller/apply-seller';
 
 export const routes: Routes = [
   {
     path: '',
     component: CustomerLayoutComponent,
     children: [
-      { path: '', redirectTo: 'products', pathMatch: 'full' },
+       { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: Home, title: 'Home' },
+  
+      // { path: '', redirectTo: 'products', pathMatch: 'full' },
       { path: 'products', component: ProductList, title: 'Products' },
       { path: 'products/:id', component: ProductDetails, title: 'Product Details' },
       { path: 'products/add', component: AddProduct, title: 'Add Product' },
@@ -38,6 +44,8 @@ export const routes: Routes = [
       { path: 'user-orders/:id', component: OrderDetails, title: 'Order Details' },
       { path: 'track-order/:orderId/:vendorId', component: TrackOrder, title: 'Track Order' },
       { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
+      { path: 'account/profile/edit', component: EditUserDetails, title: 'Edit Profile' },
+      { path: 'seller/apply', component: ApplySeller, title: 'Join us as a seller' },
     ],
   },
 
