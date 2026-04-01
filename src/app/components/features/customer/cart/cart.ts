@@ -1,13 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CartService } from '../../../../services/cart';
 import { CartItemModel, CartModel, RecieptModel } from '../../../../models/cart';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { Product } from '../../../../models/product';
-import {ProductService} from '../../../../services/product';
-import { forkJoin, Observable } from 'rxjs';
+import { ProductService } from '../../../../services/product';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
-
+import { map, filter } from 'rxjs/operators';
 @Component({
   selector: 'app-cart',
   standalone: true, 
@@ -16,26 +16,44 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrl: './cart.css',
 })
 
-export class Cart {
+export class Cart implements OnInit, OnDestroy {
   CartService = inject(CartService);
   ProductService = inject(ProductService);
   ChangeDetectorRef = inject(ChangeDetectorRef);
-  cartdata: CartModel  | null | undefined= null;
+  Router = inject(Router);
+  cartdata: CartModel  | null | undefined = null;
   recipetData: any = null;
+  private routerSubscription: Subscription | undefined;
 
   ngOnInit() {
+    
+    this.routerSubscription = this.Router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.loadCart();
+      });
+
+    // Load cart now (initial load)
     this.loadCart();
   }
-  /*
+
+  ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
   loadCart() {
-  this.CartService.getCart().subscribe({
-    next: (response) => {
-      this.cartdata = response.cart as CartModel;
-    },
-    error: (error) => console.error('Error fetching cart:', error)
-  });
-}*/
+    this.CartService.getCart().subscribe({
+      next: (response) => {
+        this.cartdata = response.cart as CartModel;
+        this.ChangeDetectorRef.detectChanges();
+      },
+      error: (error) => console.error('Error fetching cart:', error)
+    });
+  }
   
+  /*
   loadCart() {
     this.CartService.getCart().subscribe({
       next: (response) => {
@@ -69,7 +87,9 @@ export class Cart {
       }
     });
   }
-    
+*/
+
+ 
 
   updateQuantity(productId: string, quantity: number): void {
     this.CartService.updateQuantity(productId, quantity).subscribe({

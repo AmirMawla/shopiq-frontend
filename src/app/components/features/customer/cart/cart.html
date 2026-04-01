@@ -64,14 +64,17 @@
             <span class="text-primary">{{ (cartdata!.total - cartdata!.discountAmount) | currency }}</span>
           </div>
 
-          <button class="btn btn-primary w-100 py-2 fs-5 mb-2" (click)="checkout()">
+          <button class="btn btn-primary w-100 py-2 fs-5 mb-2" routerLink="/confirm-order">
             Proceed to Checkout
           </button>
           <!--
           <button class="btn btn-outline-secondary w-100 py-2" (click)="getRecipet()">
              Generate Receipt
           </button>
-        -->
+          <button class="btn btn-outline-secondary w-100 py-2" (click)="printCart()">
+             Print cart
+          </button>
+          -->
         </div>
       </div>
     </div>
