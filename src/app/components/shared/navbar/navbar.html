@@ -1,7 +1,7 @@
 <nav class="navbar-siq" [class.scrolled]="scrolled()">
   <div class="navbar-container">
 
-    <a routerLink="/" class="navbar-logo" (click)="closeMenu()">
+    <a routerLink="/home" class="navbar-logo" (click)="closeMenu()">
       <span class="siq-logo-mark" aria-hidden="true">
         <i class="fa-solid fa-bag-shopping"></i>
         <i class="fa-solid fa-bolt siq-mark-bolt"></i>
@@ -11,36 +11,25 @@
 
     <ul class="navbar-links">
       <li>
-        <a routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+        <a routerLink="/home" routerLinkActive="nav-active">Home</a>
       </li>
-      <li><a routerLink="/shop" routerLinkActive="nav-active">Shop</a></li>
-      <li class="nav-dropdown">
-        <a href="#" (click)="$event.preventDefault()">
-          Categories <i class="fa-solid fa-chevron-down"></i>
-        </a>
-        <div class="dropdown-menu-siq">
-          <a routerLink="/shop" [queryParams]="{ category: 'electronics' }">Electronics</a>
-          <a routerLink="/shop" [queryParams]="{ category: 'fashion' }">Fashion</a>
-          <a routerLink="/shop" [queryParams]="{ category: 'home' }">Home & Living</a>
-          <a routerLink="/shop" [queryParams]="{ category: 'beauty' }">Beauty</a>
-          <a routerLink="/shop" [queryParams]="{ category: 'sports' }">Sports</a>
-        </div>
-      </li>
-      <li><a routerLink="/shop" [queryParams]="{ deals: 'true' }">Deals</a></li>
+      <li><a routerLink="/products" routerLinkActive="nav-active">Products</a></li>
+      <li><a routerLink="/cart" routerLinkActive="nav-active">Cart</a></li>
+      <li><a routerLink="/user-orders" routerLinkActive="nav-active">My Orders</a></li>
     </ul>
 
     <div class="navbar-actions">
 
-      <a routerLink="/search" class="nav-icon-btn" title="Search">
+      <a routerLink="/products" class="nav-icon-btn" title="Search products">
         <i class="fa-solid fa-magnifying-glass"></i>
       </a>
 
       <a routerLink="/account/wishlist" class="nav-icon-btn" title="Wishlist">
-        <i class="fa-solid fa-heart"></i>
+        <i class="fa-solid fa-heart-circle-plus"></i>
       </a>
 
       <a routerLink="/cart" class="nav-icon-btn cart-btn" title="Cart">
-        <i class="fa-solid fa-bag-shopping"></i>
+        <i class="fa-solid fa-cart-shopping"></i>
         @if (cartCount > 0) {
         <span class="cart-badge">{{ cartCount }}</span>
         }
@@ -59,7 +48,7 @@
 
         <div class="dropdown-menu-siq" [class.user-dropdown-active]="userMenuOpen()">
           <a routerLink="/account/profile" (click)="closeMenu()">My Profile</a>
-          <a routerLink="/account/orders" (click)="closeMenu()">Orders</a>
+          <a routerLink="/user-orders" (click)="closeMenu()">Orders</a>
           <a (click)="handleLogout()" class="logout-link">Logout</a>
         </div>
       </div>
@@ -80,10 +69,9 @@
 
   @if (menuOpen()) {
   <div class="mobile-menu">
-    <a routerLink="/" (click)="closeMenu()">Home</a>
-    <a routerLink="/shop" (click)="closeMenu()">Shop</a>
-    <a routerLink="/shop" (click)="closeMenu()">Categories</a>
-    <a routerLink="/shop" (click)="closeMenu()">Deals</a>
+    <a routerLink="/home" (click)="closeMenu()">Home</a>
+    <a routerLink="/products" (click)="closeMenu()">Products</a>
+    <a routerLink="/user-orders" (click)="closeMenu()">My Orders</a>
     <a routerLink="/cart" (click)="closeMenu()">Cart ({{ cartCount }})</a>
 
     <hr class="mobile-divider">
@@ -93,7 +81,7 @@
     <a (click)="handleLogout()">Logout</a>
     } @else {
     <a routerLink="/auth/login" (click)="closeMenu()">Login</a>
-    <a routerLink="/auth/register" (click)="closeMenu()">Register</a>
+    <a routerLink="/auth/signup" (click)="closeMenu()">Register</a>
     }
   </div>
   }
