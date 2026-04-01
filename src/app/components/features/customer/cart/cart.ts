@@ -8,10 +8,11 @@ import { ProductService } from '../../../../services/product';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { map, filter } from 'rxjs/operators';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-cart',
   standalone: true, 
-  imports: [CommonModule , RouterLink],
+  imports: [CommonModule , RouterLink,FormsModule],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
@@ -24,7 +25,7 @@ export class Cart implements OnInit, OnDestroy {
   cartdata: CartModel  | null | undefined = null;
   recipetData: any = null;
   private routerSubscription: Subscription | undefined;
-
+  promoCode: string = '';
   ngOnInit() {
     
     this.routerSubscription = this.Router.events
@@ -97,6 +98,7 @@ export class Cart implements OnInit, OnDestroy {
         this.cartdata = cart;
         this.ChangeDetectorRef.detectChanges();
         this.loadCart();
+        this.applyPromoCode(this.promoCode);
       },
       error: (error) => {
         console.error('Error updating cart item', error);
@@ -123,6 +125,7 @@ export class Cart implements OnInit, OnDestroy {
         this.cartdata = response.cart;
         this.ChangeDetectorRef.detectChanges();
         this.loadCart();
+        this.applyPromoCode(this.promoCode);
       },
       error: (error) => {
         console.error('Error removing cart item', error);
@@ -171,6 +174,21 @@ export class Cart implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error during checkout', error);
+        this.ChangeDetectorRef.detectChanges();
+      }
+    })
+  }
+
+  applyPromoCode(promoCode: string): void {
+    this.CartService.applyPromoCode(promoCode).subscribe({
+      next: (response) => {
+        this.cartdata = response.cart as CartModel;
+        console.log('Promo code applied successfully, updated cart data:', response.cart);
+        this.ChangeDetectorRef.detectChanges();
+        this.loadCart()
+      },
+      error: (error) => {
+        console.error('Error applying promo code', error);
         this.ChangeDetectorRef.detectChanges();
       }
     })

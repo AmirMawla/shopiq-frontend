@@ -61,4 +61,8 @@ export class CartService {
   checkout(): Observable<any> {
     return this.httpClient.post(`${this.apiUrl}/checkout`, {}, { 'headers': this.headers() })
   }
+
+  applyPromoCode(promoCode: string): Observable<APIResponse<CartModel>> {
+    return this.httpClient.post<APIResponse<CartModel>>(`${this.apiUrl}/promocode`, { promoCode },{ 'headers': this.headers() })
+  }
 }
