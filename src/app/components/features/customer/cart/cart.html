@@ -61,7 +61,7 @@
           
           <div class="d-flex justify-content-between mb-2">
             <span class="text-muted-custom">Subtotal</span>
-            <span class="fw-bold">{{ cartdata.total | currency }}</span>
+            <span class="fw-bold">{{ cartdata.total + cartdata.discountAmount | currency }}</span>
           </div>
           <!--
           @if (cartdata.discountAmount > 0) {
@@ -80,12 +80,19 @@
 
           <div class="d-flex justify-content-between mb-4 fs-5 fw-bold">
             <span>Total</span>
-            <span class="text-brand">{{ (cartdata.total - cartdata.discountAmount) | currency }}</span>
+            <span class="text-brand">{{ cartdata.total | currency }}</span>
           </div>
 
+          <span class="text-muted-custom">Enter Promo Code:</span>
+          <input type="text" class="form-control mb-3" title="Enter promo code" placeholder="valid: shopiq1, shopiq2, shopiq3" [(ngModel)]="promoCode">
+            <button class="btn btn-brand w-100 py-3 fs-5 mb-3" (click)="applyPromoCode(promoCode)">
+            Apply Promo Code
+          </button>
           <button class="btn btn-brand w-100 py-3 fs-5 mb-3" routerLink="/confirm-order">
             Proceed to Checkout
           </button>
+          
+
 
           <!--
           <div class="d-grid gap-2">
