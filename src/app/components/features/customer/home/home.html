@@ -3,39 +3,40 @@
 
   <!-- ═══════════════ HERO BANNER ═══════════════ -->
   <section style="position: relative; overflow: hidden; background: var(--sidebar); margin-bottom: 48px;">
-    
+
     @for(banner of banners; track $index){
-      @if($index === activeBanner){
-        <div style="position: relative; min-height: 420px; display: flex; align-items: center;">
-          <img [src]="banner.imageUrl" alt="{{ banner.title }}"
-            style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3;">
-          
-          <div style="position: relative; z-index: 1; padding: 0 64px; max-width: 600px;">
-            <p style="font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--primary); margin-bottom: 12px;">
-              Featured
-            </p>
-            <h1 style="font-size: 40px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; line-height: 1.2;">
-              {{ banner.title }}
-            </h1>
-            <p style="font-size: 16px; color: var(--muted-dark); margin-bottom: 28px;">
-              {{ banner.subtitle }}
-            </p>
-            <a [routerLink]="banner.link" class="btn-siq" style="font-size: 14px; padding: 12px 28px;">
-              Shop Now →
-            </a>
-          </div>
+    @if($index === activeBanner){
+    <div style="position: relative; min-height: 420px; display: flex; align-items: center;">
+      <img [src]="banner.imageUrl" alt="{{ banner.title }}"
+        style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3;">
 
-          <!-- Banner Controls -->
-          <div style="position: absolute; bottom: 24px; right: 40px; display: flex; gap: 8px; align-items: center;">
-            <button class="topbar-icon-btn" (click)="prevBanner()">←</button>
-            <span style="color: var(--muted-dark); font-size: 13px;">
-              {{ activeBanner + 1 }} / {{ banners.length }}
-            </span>
-            <button class="topbar-icon-btn" (click)="nextBanner()">→</button>
-          </div>
+      <div style="position: relative; z-index: 1; padding: 0 64px; max-width: 600px;">
+        <p
+          style="font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--primary); margin-bottom: 12px;">
+          Featured
+        </p>
+        <h1 style="font-size: 40px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; line-height: 1.2;">
+          {{ banner.title }}
+        </h1>
+        <p style="font-size: 16px; color: var(--muted-dark); margin-bottom: 28px;">
+          {{ banner.subtitle }}
+        </p>
+        <a [routerLink]="banner.link" class="btn-siq" style="font-size: 14px; padding: 12px 28px;">
+          Shop Now →
+        </a>
+      </div>
 
-        </div>
-      }
+      <!-- Banner Controls -->
+      <div style="position: absolute; bottom: 24px; right: 40px; display: flex; gap: 8px; align-items: center;">
+        <button class="topbar-icon-btn" (click)="prevBanner()">←</button>
+        <span style="color: var(--muted-dark); font-size: 13px;">
+          {{ activeBanner + 1 }} / {{ banners.length }}
+        </span>
+        <button class="topbar-icon-btn" (click)="nextBanner()">→</button>
+      </div>
+
+    </div>
+    }
     }
 
   </section>
@@ -51,30 +52,29 @@
 
       <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
         @for(cat of categories; track cat._id){
-          <div (click)="filterByCategory(cat._id!)"
-            style="background: var(--panel); border: 0.5px solid var(--border);
+        <div (click)="filterByCategory(cat._id!)" style="background: var(--panel); border: 0.5px solid var(--border);
                    border-radius: var(--radius-lg); padding: 24px 16px;
                    text-align: center; cursor: pointer; transition: all 0.15s;"
-            onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-2px)'"
-            onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)'">
-            
-            <!-- Category Icon -->
-            <div style="width: 56px; height: 56px; border-radius: 50%;
+          onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-2px)'"
+          onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)'">
+
+          <!-- Category Icon -->
+          <div style="width: 56px; height: 56px; border-radius: 50%;
                         background: var(--primary-light); display: flex;
                         align-items: center; justify-content: center;
                         margin: 0 auto 12px; font-size: 24px;">
-              @if(cat.name === 'Electronics'){ 💻 }
-              @else if(cat.name === 'Fashion'){ 👗 }
-              @else if(cat.name === 'Home & Kitchen'){ 🏠 }
-              @else if(cat.name === 'Beauty & Care'){ ✨ }
-              @else if(cat.name === 'Sports & Outdoors'){ 🏋️ }
-              @else { 🛍️ }
-            </div>
-
-            <p style="font-size: 13px; font-weight: 500; color: var(--text);">
-              {{ cat.name }}
-            </p>
+            @if(cat.name === 'Electronics'){ 💻 }
+            @else if(cat.name === 'Fashion'){ 👗 }
+            @else if(cat.name === 'Home & Kitchen'){ 🏠 }
+            @else if(cat.name === 'Beauty & Care'){ ✨ }
+            @else if(cat.name === 'Sports & Outdoors'){ 🏋️ }
+            @else { 🛍️ }
           </div>
+
+          <p style="font-size: 13px; font-weight: 500; color: var(--text);">
+            {{ cat.name }}
+          </p>
+        </div>
         }
       </div>
     </section>
@@ -88,23 +88,32 @@
 
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
         @for(p of recentProducts; track p._id){
-          <div class="product-card" [routerLink]="['/products', p._id]">
-            <img [src]="p.imageUrl" class="product-card-img" [alt]="p.name">
-            <div class="product-card-body">
-              <p class="product-card-category">{{ $any(p.categoryId)?.name }}</p>
-              <p class="product-card-name">{{ p.name }}</p>
-              <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span class="product-card-price">${{ p.price }}</span>
-                @if(p.stock == 0){
-                  <span class="pill pill-cancelled">Out of Stock</span>
-                } @else if(p.stock <= 5){
-                  <span class="pill pill-processing">Almost Out</span>
+        <div class="product-card" [routerLink]="['/products', p._id]" style="position: relative;">
+
+          <button class="btn-fav-floating" [class.active]="isProductFavorited(p._id!)"
+            (click)="toggleFavorite($event, p._id!)" aria-label="Toggle Favorite">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+              </path>
+            </svg>
+          </button>
+
+          <img [src]="p.imageUrl" class="product-card-img" [alt]="p.name">
+          <div class="product-card-body">
+            <p class="product-card-category">{{ $any(p.categoryId)?.name }}</p>
+            <p class="product-card-name">{{ p.name }}</p>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span class="product-card-price">${{ p.price }}</span>
+              @if(p.stock == 0){
+              <span class="pill pill-cancelled">Out of Stock</span>
+              } @else if(p.stock <= 5){ <span class="pill pill-processing">Almost Out</span>
                 } @else {
-                  <span class="pill pill-active">In Stock</span>
+                <span class="pill pill-active">In Stock</span>
                 }
-              </div>
             </div>
           </div>
+        </div>
         }
       </div>
     </section>
@@ -117,7 +126,7 @@
             Special <span>Offers</span> Just For You
           </h2>
           <p class="hero-banner-sub">
-            Use code <strong style="color: var(--primary);">SHOPIQ15</strong> 
+            Use code <strong style="color: var(--primary);">SHOPIQ15</strong>
             for 15% off orders over $500
           </p>
           <a routerLink="/products" class="btn-siq">Shop Now →</a>

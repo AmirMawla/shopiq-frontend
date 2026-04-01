@@ -17,6 +17,7 @@ import { ProductService } from '../../../../services/product';
 import { CategoriesS } from '../../../../services/category';
 import {BannerService} from '../../../../services/banner';
 import { RouterLink } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -30,9 +31,11 @@ export class Home implements OnInit {
   private categoryService = inject(CategoriesS);
   private bannerService = inject(BannerService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   recentProducts: Product[] = [];
   categories: Category[] = [];
+  favoritedIds: Set<string> = new Set();
   banners: Banner[] = [ {
     title: 'New Arrivals',
     imageUrl: 'https://placehold.co/1200x400/7C6EF5/ffffff?text=New+Arrivals',
@@ -86,7 +89,44 @@ export class Home implements OnInit {
     error: (err) => console.log(err)
   });
 
+  this.loadFavorites();
    }
+
+  loadFavorites(): void {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    this.productService.getMyFavorites().subscribe({
+      next: (res) => {
+        const favs = res.data || [];
+        this.favoritedIds = new Set(favs.map((f: any) => f.productId?._id));
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  isProductFavorited(id: string): boolean {
+    return this.favoritedIds.has(id);
+  }
+
+  toggleFavorite(event: Event, id: string): void {
+    event.stopPropagation();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigateByUrl('/auth/login');
+      return;
+    }
+
+    this.productService.toggleFavorite(id).subscribe({
+      next: (res) => {
+        if (res.data.isFavorited) {
+          this.favoritedIds.add(id);
+        } else {
+          this.favoritedIds.delete(id);
+        }
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   filterByCategory(categoryId: string): void {
     this.router.navigate(['/products'], { 

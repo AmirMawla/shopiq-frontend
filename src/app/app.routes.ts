@@ -23,6 +23,7 @@ import { authGuard } from './guards/auth-guard';
 import { roleGuard } from './guards/role-guard';
 import { EditUserDetails } from './components/features/user/edit-user-details/edit-user-details';
 import { ApplySeller } from './components/features/user/apply-seller/apply-seller';
+import { FavoritesList } from './components/features/customer/favourites-list/favourites-list';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,7 @@ export const routes: Routes = [
       { path: 'track-order/:orderId/:vendorId', component: TrackOrder, title: 'Track Order' },
       { path: 'account/profile', component: UserDetailsComponent, title: 'My Profile' },
       { path: 'account/profile/edit', component: EditUserDetails, title: 'Edit Profile' },
+      { path: 'account/wishlist', component: FavoritesList, title: 'My Wishlist' },
       { path: 'seller/apply', component: ApplySeller, title: 'Join us as a seller' },
     ],
   },

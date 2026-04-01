@@ -3,17 +3,18 @@ import { Router } from '@angular/router';
 import { Product } from '../../../../models/product';
 import { Category } from '../../../../models/category';
 import { ProductService } from '../../../../services/product';
-import { CategoriesS} from '../../../../services/category';
+import { CategoriesS } from '../../../../services/category';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [NgClass, FormsModule],
   templateUrl: './product-list.html',
-  styleUrl: './product-list.css'
+  styleUrl: './product-list.css',
 })
 export class ProductList implements OnInit {
   private productService = inject(ProductService);
@@ -24,6 +25,7 @@ export class ProductList implements OnInit {
 
   products: Product[] = [];
   categories: Category[] = [];
+  favoritedIds: Set<string> = new Set();
   loading = true;
   errorMessage: string | null = null;
 
@@ -34,12 +36,49 @@ export class ProductList implements OnInit {
   ngOnInit(): void {
     this.loadCategories();
     this.loadProducts();
-    this.activatedRoute.queryParams.subscribe(params => {
-    if (params['categoryId']) {
-      this.selectedCategoryId = params['categoryId'];
-      this.filterByCategory(this.selectedCategoryId);
+    this.loadFavorites();
+    this.activatedRoute.queryParams.subscribe((params) => {
+      if (params['categoryId']) {
+        this.selectedCategoryId = params['categoryId'];
+        this.filterByCategory(this.selectedCategoryId);
+      }
+    });
+  }
+
+  loadFavorites(): void {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    this.productService.getMyFavorites().subscribe({
+      next: (res) => {
+        const favs = res.data || [];
+        this.favoritedIds = new Set(favs.map((f: any) => f.productId?._id));
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  isProductFavorited(id: string): boolean {
+    return this.favoritedIds.has(id);
+  }
+
+  toggleFavorite(event: Event, id: string): void {
+    event.stopPropagation();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigateByUrl('/auth/login');
+      return;
     }
-  });
+
+    this.productService.toggleFavorite(id).subscribe({
+      next: (res) => {
+        if (res.data.isFavorited) {
+          this.favoritedIds.add(id);
+        } else {
+          this.favoritedIds.delete(id);
+        }
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   applyFilters(): void {
@@ -129,4 +168,3 @@ export class ProductList implements OnInit {
     }
   }
 }
-

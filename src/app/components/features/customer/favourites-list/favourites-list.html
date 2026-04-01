@@ -1,0 +1,51 @@
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title">My Favorites</h2>
+        <span class="pill pill-info">{{ favorites.length }} Items</span>
+    </div>
+
+    @if(loading) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted-siq mt-2">Loading your collection...</p>
+    </div>
+    } @else if (favorites.length === 0) {
+    <div class="card-siq text-center py-5">
+        <div class="mb-3" style="font-size: 48px;">💝</div>
+        <h3 class="section-title">Your wishlist is empty</h3>
+        <p class="text-muted-siq mb-4">Save items you love to find them easily later.</p>
+        <button class="btn-siq px-5" routerLink="/products">Start Shopping</button>
+    </div>
+    } @else {
+    <div class="row g-4">
+        @for(fav of favorites; track fav._id) {
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="fav-custom-card" [routerLink]="['/products', fav.productId?._id]">
+                <div class="fav-card-image">
+                    <img [src]="fav.productId?.imageUrl" [alt]="fav.productId?.name">
+                    <button class="btn-remove-fav" (click)="removeItem(fav.productId?._id, $event)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="fav-card-content">
+                    <p class="fav-category">{{ fav.productId?.categoryId?.name || 'Product' }}</p>
+                    <h4 class="fav-name">{{ fav.productId?.name }}</h4>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="fav-price">${{ fav.productId?.price }}</span>
+                        @if(fav.productId?.stock > 0) {
+                        <span class="text-success-siq" style="font-size: 12px; font-weight: 500;">In Stock</span>
+                        } @else {
+                        <span class="text-danger-siq" style="font-size: 12px; font-weight: 500;">Out of Stock</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    }
+</div>

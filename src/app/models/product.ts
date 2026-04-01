@@ -15,3 +15,15 @@ export interface Product {
     tags?: string[];
     inStock?: boolean;
 }
+
+export interface Review {
+    _id?: string;
+    userId: any;
+    productId: string;
+    rating: number;
+    comment: string;
+    images?: string[];
+    isApproved?: boolean;
+    isReported?: boolean;
+    createdAt?: string;
+}
