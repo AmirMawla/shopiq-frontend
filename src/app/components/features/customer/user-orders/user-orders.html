@@ -14,8 +14,12 @@
       <div class="user-orders-error-body">{{ errorMessage }}</div>
     </div>
   } @else if (!orders.length) {
-    <div class="user-orders-empty">
-      You don't have any orders yet.
+    <div class="user-orders-empty card-siq">
+      <div class="user-orders-empty-icon" aria-hidden="true">
+        <i class="fa-solid fa-receipt"></i>
+      </div>
+      <div class="user-orders-empty-title">No orders yet</div>
+      <div class="user-orders-empty-sub">Your orders will show up here after you complete a purchase.</div>
     </div>
   } @else {
     <div class="user-orders-list">

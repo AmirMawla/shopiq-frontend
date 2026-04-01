@@ -9,6 +9,15 @@
 
   @if (loading) {
     <div class="confirm-empty">Loading checkout preview...</div>
+  } @else if (emptyCart) {
+    <div class="confirm-empty-cart card-siq">
+      <div class="confirm-empty-cart-icon" aria-hidden="true">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </div>
+      <h3 class="confirm-empty-cart-title">Your cart is empty</h3>
+      <p class="confirm-empty-cart-text">Add products to your cart before you confirm your order.</p>
+      <a routerLink="/products" class="btn-siq">Browse products</a>
+    </div>
   } @else if (errorMessage) {
     <div class="confirm-error">
       <div class="confirm-error-title">Something went wrong</div>

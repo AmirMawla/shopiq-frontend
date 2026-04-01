@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { OrderService } from '../../../../services/order';
 import type {
   CheckoutPreviewItem,
@@ -10,7 +11,7 @@ import type {
 @Component({
   selector: 'app-confirm-order',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './confirm-order.html',
   styleUrl: './confirm-order.css',
 })
@@ -21,6 +22,7 @@ export class ConfirmOrder {
   public loading = true;
   public confirmLoading = false;
   public errorMessage: string | null = null;
+  public emptyCart = false;
 
   public preview: CheckoutPreviewResponse | null = null;
   public groupedVendors: Array<{
@@ -34,17 +36,43 @@ export class ConfirmOrder {
   ngOnInit(): void {
     this.orderService.getCheckoutPreview().subscribe({
       next: (res) => {
-        this.preview = res.data;
-        this.groupedVendors = this.groupByVendor(this.preview.items);
+        const data = res?.data;
+        const items = data?.items ?? [];
+        if (!data || !items.length) {
+          this.emptyCart = true;
+          this.preview = null;
+          this.groupedVendors = [];
+          this.errorMessage = null;
+        } else {
+          this.emptyCart = false;
+          this.preview = data;
+          this.groupedVendors = this.groupByVendor(items);
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.errorMessage = 'Failed to load checkout preview.';
+      error: (err) => {
         this.loading = false;
+        if (this.isEmptyCartError(err)) {
+          this.emptyCart = true;
+          this.preview = null;
+          this.groupedVendors = [];
+          this.errorMessage = null;
+        } else {
+          this.emptyCart = false;
+          this.errorMessage = 'Failed to load checkout preview.';
+        }
         this.cdr.detectChanges();
       },
     });
+  }
+
+  private isEmptyCartError(err: unknown): boolean {
+    const e = err as { status?: number; error?: { message?: string; error?: string } };
+    const status = e?.status;
+    const msg = String(e?.error?.message || e?.error?.error || '').toLowerCase();
+    if (status === 404) return true;
+    return /cart.*empty|empty.*cart|cart not found|not found or empty/.test(msg);
   }
 
   private groupByVendor(items: CheckoutPreviewItem[]) {

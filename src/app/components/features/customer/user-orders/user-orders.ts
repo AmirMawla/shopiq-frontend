@@ -41,7 +41,7 @@ export class UserOrders implements OnInit {
       .getUserOrders({ page: 1, limit: 20 })
       .subscribe({
         next: (res: ApiResponse<PagedResult<any>>) => {
-          const items = res.data.items || [];
+          const items = res?.data?.items ?? [];
           this.orders = items.map((x: any) => ({
             id: x.id,
             status: x.status,
@@ -50,6 +50,7 @@ export class UserOrders implements OnInit {
             itemCount: x.itemCount ?? 0,
             vendors: Array.isArray(x.vendors) ? x.vendors : [],
           }));
+          this.errorMessage = null;
           this.loading = false;
           this.cdr.detectChanges();
         },
