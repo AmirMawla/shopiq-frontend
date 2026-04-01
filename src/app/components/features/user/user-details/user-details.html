@@ -85,22 +85,28 @@
         </div>
 
         @if (user().sellerProfile?.storeName) {
-        <div class="card-siq seller-card">
-            <h3 class="section-title">Store: {{ user().sellerProfile.storeName }}</h3>
+        <div class="card-siq seller-card" [class.pending-border]="!user().sellerProfile.isApproved">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 class="section-title" style="margin: 0;">Store: {{ user().sellerProfile.storeName }}</h3>
+                <span class="pill" [ngClass]="user().sellerProfile.isApproved ? 'pill-approved' : 'pill-pending'">
+                    {{ user().sellerProfile.isApproved ? 'Approved Seller' : 'Application Pending' }}
+                </span>
+            </div>
             <p class="bio-text">{{ user().sellerProfile.bio }}</p>
+
+            @if (user().sellerProfile.isApproved) {
             <div class="info-grid" style="margin-top: 15px;">
                 <div class="info-item">
                     <span class="info-label">Total Earnings</span>
                     <span class="info-value text-success-siq">${{ user().sellerProfile.earnings }}</span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Status</span>
-                    <span class="pill" [class.pill-approved]="user().sellerProfile.isApproved"
-                        [class.pill-pending]="!user().sellerProfile.isApproved">
-                        {{ user().sellerProfile.isApproved ? 'Approved' : 'Pending Approval' }}
-                    </span>
-                </div>
             </div>
+            } @else {
+            <div class="alert-info-siq">
+                <small>Our administrators are currently reviewing your application. You will be notified once
+                    approved.</small>
+            </div>
+            }
         </div>
         } @else {
         <div class="card-siq seller-promo">

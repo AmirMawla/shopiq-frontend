@@ -27,12 +27,26 @@ export class UserService {
   }
 
   updateMe(data: any) {
-    return this.http.patch<any>(`${this.usersUrl}/updateMe`, data, { headers: this.getHeaders() }).pipe(
-      tap((res: any) => {
-        if (res.success && res.data) {
-          this.authService.updateUserState(res.data);
-        }
-      }),
-    );
+    return this.http
+      .patch<any>(`${this.usersUrl}/updateMe`, data, { headers: this.getHeaders() })
+      .pipe(
+        tap((res: any) => {
+          if (res.success && res.data) {
+            this.authService.updateUserState(res.data);
+          }
+        }),
+      );
+  }
+
+  applyForSeller(data: { storeName: string; bio: string }) {
+    return this.http
+      .post<any>(`${this.usersUrl}/apply-seller`, data, { headers: this.getHeaders() })
+      .pipe(
+        tap((res: any) => {
+          if (res.success && res.data) {
+            this.authService.updateUserState(res.data);
+          }
+        }),
+      );
   }
 }
