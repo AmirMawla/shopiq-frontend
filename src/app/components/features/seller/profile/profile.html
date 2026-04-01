@@ -1,1 +1,54 @@
-<p>profile works!</p>
+<div>
+  <div class="section-header">
+    <h2 class="page-title">My Store Profile</h2>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-siq" (click)="editMode = !editMode">
+        {{ editMode ? 'Cancel' : 'Edit Profile' }}
+      </button>
+      <button class="btn-outline-siq" (click)="closeStore()">
+        Close Store
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="text-muted-siq">Loading profile...</div>
+  } @else if (error) {
+    <div class="text-danger-siq">{{ error }}</div>
+  } @else {
+    <div class="card-siq" style="max-width: 600px;">
+      @if (!editMode) {
+        <div class="form-group">
+          <label class="form-label-siq">Store Name</label>
+          <p>{{ profile.storeName }}</p>
+        </div>
+        <div class="divider"></div>
+        <div class="form-group">
+          <label class="form-label-siq">Bio</label>
+          <p>{{ profile.bio }}</p>
+        </div>
+        <div class="divider"></div>
+        <div class="form-group">
+          <label class="form-label-siq">Status</label>
+          <span [class]="profile.isApproved ? 'pill pill-approved' : 'pill pill-pending'">
+            {{ profile.isApproved ? 'Approved' : 'Pending' }}
+          </span>
+        </div>
+        <div class="form-group">
+          <label class="form-label-siq">Earnings</label>
+          <p>${{ profile.earnings }}</p>
+        </div>
+      } @else {
+        <div class="form-group">
+          <label class="form-label-siq">Store Name</label>
+          <input class="form-input-siq" type="text" [(ngModel)]="editData.storeName"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label-siq">Bio</label>
+          <textarea class="form-input-siq" rows="4" [(ngModel)]="editData.bio"></textarea>
+        </div>
+        <button class="btn-siq" (click)="updateProfile()">Save Changes</button>
+      }
+    </div>
+  }
+</div>

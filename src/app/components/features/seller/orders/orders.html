@@ -1,0 +1,59 @@
+<div>
+  <div class="section-header">
+    <h2 class="page-title">My Orders</h2>
+  </div>
+
+  @if (loading) {
+    <div class="text-muted-siq">Loading orders...</div>
+  } @else if (error) {
+    <div class="text-danger-siq">{{ error }}</div>
+  } @else if (orders.length === 0) {
+    <div class="card-siq">
+      <p class="text-muted-siq">No orders yet</p>
+    </div>
+  } @else {
+    <div class="card-siq">
+      <table class="table-siq">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Update Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders; track $index) {
+            <tr>
+              <td>#{{ order.id ? order.id.slice(-6).toUpperCase() : 'N/A' }}</td>
+              <td>{{ order.userName || order.userId }}</td>
+              <td>${{ order.totalAmount }}</td>
+              <td>
+                <span [class]="
+                  order.status === 'delivered' ? 'pill pill-delivered' :
+                  order.status === 'outfordelivery' ? 'pill pill-shipped' :
+                  order.status === 'canceled' ? 'pill pill-cancelled' :
+                  order.status === 'returned' ? 'pill pill-cancelled' :
+                  'pill pill-pending'">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td>{{ order.orderDate | date:'mediumDate' }}</td>
+              <td>
+                <select class="form-input-siq"
+                  style="width:auto; padding: 6px 10px;"
+                  (change)="updateStatus(order.id, $any($event.target).value)">
+                  @for (s of statusOptions; track s) {
+                    <option [value]="s" [selected]="s === order.status">{{ s }}</option>
+                  }
+                </select>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
