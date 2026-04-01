@@ -1,1 +1,42 @@
-<p>low-stock works!</p>
+<div>
+  <div class="section-header">
+    <h2 class="page-title">Low Stock Products</h2>
+  </div>
+
+  @if (loading) {
+    <div class="text-muted-siq">Loading...</div>
+  } @else if (error) {
+    <div class="text-danger-siq">{{ error }}</div>
+  } @else if (products.length === 0) {
+    <div class="card-siq">
+      <p class="text-muted-siq">No low stock products 🎉</p>
+    </div>
+  } @else {
+    <div class="card-siq">
+      <table class="table-siq">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of products; track product._id) {
+            <tr>
+              <td>{{ product.name }}</td>
+              <td>${{ product.price }}</td>
+              <td>
+                <span class="pill pill-cancelled">{{ product.stock }} left</span>
+              </td>
+              <td>
+                <span class="pill pill-processing">Low Stock</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

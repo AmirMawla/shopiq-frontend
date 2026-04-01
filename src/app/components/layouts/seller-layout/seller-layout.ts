@@ -28,7 +28,9 @@ export class SellerLayoutComponent {
       title: 'Seller',
       items: [
         { label: 'Dashboard', route: '/seller/dashboard' },
+        { label: 'Profile', route: '/seller/profile' },
         { label: 'My Products', route: '/seller/products' },
+        { label: 'Low Stock', route: '/seller/low-stock' },
         { label: 'My Orders', route: '/seller/orders' },
         { label: 'Earnings', route: '/seller/earnings' },
       ],

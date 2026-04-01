@@ -50,4 +50,11 @@ export class SellerService {
   getLowStockProducts() {
     return this.http.get(`${this.baseUrl}/products/low-stock`, { headers: this.getHeaders() });
   }
+getVendorOrders() {
+    return this.http.get(`${environment.apiUrl}/orders/vendors`, { headers: this.getHeaders() });
+}
+
+updateOrderStatus(orderId: string, data: any) {
+    return this.http.put(`${environment.apiUrl}/orders/${orderId}/status`, data, { headers: this.getHeaders() });
+}
 }

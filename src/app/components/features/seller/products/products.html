@@ -1,1 +1,96 @@
-<p>products works!</p>
+<div>
+  <div class="section-header">
+    <h2 class="page-title">My Products</h2>
+    <button class="btn-siq" (click)="showForm = !showForm">
+      + Add Product
+    </button>
+  </div>
+
+  @if (showForm) {
+  <div class="card-siq" style="margin-bottom: 24px;">
+    <div class="form-group">
+      <label class="form-label-siq">Product Name</label>
+      <input class="form-input-siq" type="text" placeholder="Product name" [(ngModel)]="newProduct.name" />
+    </div>
+    <div class="form-group">
+      <label class="form-label-siq">Description</label>
+      <textarea class="form-input-siq" rows="3" placeholder="Product description"
+        [(ngModel)]="newProduct.description"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label-siq">Price</label>
+      <input class="form-input-siq" type="number" placeholder="0" [(ngModel)]="newProduct.price" />
+    </div>
+    <div class="form-group">
+      <label class="form-label-siq">Stock</label>
+      <input class="form-input-siq" type="number" placeholder="0" [(ngModel)]="newProduct.stock" />
+    </div>
+    <div class="form-group">
+      <label class="form-label-siq">Category ID</label>
+      <input class="form-input-siq" type="text" placeholder="Category ID" [(ngModel)]="newProduct.categoryId" />
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-siq" (click)="createProduct()">Create</button>
+      <button class="btn-ghost-siq" (click)="showForm = false">Cancel</button>
+    </div>
+  </div>
+  }
+  @if (editingProduct) {
+  <div class="card-siq" style="margin-bottom: 24px;">
+    <h3 style="margin-bottom:16px; font-size:15px;">Edit Product</h3>
+    <div class="form-group">
+      <label class="form-label-siq">Product Name</label>
+      <input class="form-input-siq" type="text" [(ngModel)]="editingProduct.name" />
+    </div>
+    <div class="form-group">
+      <label class="form-label-siq">Price</label>
+      <input class="form-input-siq" type="number" [(ngModel)]="editingProduct.price" />
+    </div>
+    <div class="form-group">
+      <label class="form-label-siq">Stock</label>
+      <input class="form-input-siq" type="number" [(ngModel)]="editingProduct.stock" />
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-siq" (click)="updateProduct()">Save</button>
+      <button class="btn-ghost-siq" (click)="editingProduct = null">Cancel</button>
+    </div>
+  </div>
+  }
+  @if (loading) {
+  <div class="text-muted-siq">Loading products...</div>
+  } @else if (error) {
+  <div class="text-danger-siq">{{ error }}</div>
+  } @else {
+  <div class="card-siq">
+    <table class="table-siq">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of products; track product._id) {
+        <tr>
+          <td>{{ product.name }}</td>
+          <td>${{ product.price }}</td>
+          <td>{{ product.stock }}</td>
+          <td>
+                <span [class]="product.isActive ? 'pill pill-active' : 'pill pill-inactive'">
+                  {{ product.isActive ? 'Active' : 'Deleted' }}
+                </span>
+              </td>
+              <td style="display:flex; gap:8px;">
+                <button class="btn-siq" (click)="startEdit(product)">Edit</button>
+                <button class="btn-outline-siq" (click)="deleteProduct(product._id)">Delete</button>
+              </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</div>
