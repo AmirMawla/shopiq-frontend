@@ -82,7 +82,15 @@ export class AdminService {
   getAllBanners() {
     return this.http.get(`${this.baseUrl}/banners`, { headers: this.getHeaders() });
   }
-
+uploadBannerImage(file: File) {
+    const formData = new FormData();
+    formData.append('bannerImage', file);
+    return this.http.post(`${this.baseUrl}/banners/upload-image`, formData, {
+        headers: new HttpHeaders({
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+        })
+    });
+}
   createBanner(data: any) {
     return this.http.post(`${this.baseUrl}/banners`, data, { headers: this.getHeaders() });
   }
