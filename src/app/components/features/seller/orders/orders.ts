@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject,ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SellerService } from '../../../../services/seller';
 import { DatePipe } from '@angular/common';
@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 })
 export class Orders {
   private sellerService = inject(SellerService);
+private cdr = inject(ChangeDetectorRef);
   orders: any[] = [];
   loading = true;
   error = '';
@@ -35,10 +36,13 @@ export class Orders {
         console.log('Vendor orders:', res);
         this.orders = res.data?.items || res.data || [];
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.error = 'Failed to load orders';
         this.loading = false;
+        this.cdr.detectChanges();
+
       }
     });
   }
