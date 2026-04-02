@@ -34,7 +34,15 @@ export class SellerService {
   getMyProductById(id: string) {
     return this.http.get(`${this.baseUrl}/products/${id}`, { headers: this.getHeaders() });
   }
-
+uploadProductImage(file: File) {
+    const formData = new FormData();
+    formData.append('productImage', file);
+    return this.http.post(`${this.baseUrl}/products/upload-image`, formData, {
+        headers: new HttpHeaders({
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+        })
+    });
+}
   createProduct(data: any) {
     return this.http.post(`${this.baseUrl}/products`, data, { headers: this.getHeaders() });
   }

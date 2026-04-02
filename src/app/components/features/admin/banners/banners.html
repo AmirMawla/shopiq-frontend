@@ -13,9 +13,13 @@
         <input class="form-input-siq" type="text" placeholder="Banner title" [(ngModel)]="newBanner.title"/>
       </div>
       <div class="form-group">
-        <label class="form-label-siq">Image URL</label>
-        <input class="form-input-siq" type="text" placeholder="https://..." [(ngModel)]="newBanner.imageUrl"/>
-      </div>
+  <label class="form-label-siq">Banner Image</label>
+  <input
+    class="form-input-siq"
+    type="file"
+    accept="image/*"
+    (change)="onFileSelected($event)"/>
+</div>
       <div class="form-group">
         <label class="form-label-siq">Link</label>
         <input class="form-input-siq" type="text" placeholder="https://..." [(ngModel)]="newBanner.link"/>

@@ -16,6 +16,8 @@ export class Banners {
   loading = true;
   error = '';
   showForm = false;
+  uploading = false;
+  selectedFile: File | null = null;
 
   newBanner = {
     title: '',
@@ -45,15 +47,36 @@ export class Banners {
     });
   }
 
+onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
   createBanner() {
-    if (!this.newBanner.title || !this.newBanner.imageUrl) return;
-    this.adminService.createBanner(this.newBanner).subscribe({
-      next: () => {
-        this.newBanner = { title: '', imageUrl: '', link: '', order: 0, isActive: true };
-        this.showForm = false;
-        this.loadBanners();
-      },
-      error: (err: any) => alert('Failed to create banner'),
+
+    if (!this.newBanner.title) return alert('Please enter a title');
+    if (!this.selectedFile) return alert('Please select an image');
+
+    this.uploading = true;
+    this.adminService.uploadBannerImage(this.selectedFile).subscribe({
+      next: (res: any) => {
+        this.newBanner.imageUrl = res.data.url;
+        this.adminService.createBanner(this.newBanner).subscribe({
+          next: () => {
+            this.newBanner = { title: '', imageUrl: '', link: '', order: 0, isActive: true };
+            this.selectedFile = null;
+            this.showForm = false;
+            this.uploading = false;
+            this.loadBanners();
+          },
+          error: (err: any) => {
+            this.uploading = false;
+            alert('Failed to create banner');
+          }
+        });
+},
+      error: (err: any) => {
+        this.uploading = false;
+        alert('Failed to upload image');
+      }
     });
   }
 

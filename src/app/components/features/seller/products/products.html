@@ -18,6 +18,10 @@
         [(ngModel)]="newProduct.description"></textarea>
     </div>
     <div class="form-group">
+    <label class="form-label-siq">Product Image (optional)</label>
+    <input class="form-input-siq" type="file" accept="image/*" (change)="onFileSelected($event)"/>
+</div>
+    <div class="form-group">
       <label class="form-label-siq">Price</label>
       <input class="form-input-siq" type="number" placeholder="0" [(ngModel)]="newProduct.price" />
     </div>
