@@ -26,7 +26,16 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.errorMessage = null;
       this.authService.login(this.loginForm.value).subscribe({
-        next: () => this.router.navigate(['/']),
+        next: () => {
+          const userRole = JSON.parse(localStorage.getItem('user') || '')?.role;
+          console.log('usr role is ', userRole, typeof userRole);
+
+          userRole === 'customer'
+            ? this.router.navigate(['/'])
+            : userRole === 'admin'
+              ? this.router.navigate(['/admin'])
+              : this.router.navigate(['/seller']);
+        },
         error: (err) => {
           this.errorMessage = err.error?.message || 'An unexpected error occurred';
           console.error('Login error', err);
