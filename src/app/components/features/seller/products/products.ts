@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SellerService } from '../../../../services/seller';
+import { CategoriesS } from '../../../../services/category';
+import { Category } from '../../../../models/category';
 
 @Component({
   selector: 'app-seller-products',
@@ -11,6 +13,7 @@ import { SellerService } from '../../../../services/seller';
 })
 export class Products {
   private sellerService = inject(SellerService);
+  private categoriesService = inject(CategoriesS);
 
   products: any[] = [];
   loading = true;
@@ -19,6 +22,10 @@ export class Products {
   editingProduct: any = null;
   selectedFile: File | null = null;
   uploading = false;
+
+  categories: Category[] = [];
+  categoriesLoading = false;
+  categoriesError = '';
 
   newProduct = {
     name: '',
@@ -31,6 +38,7 @@ export class Products {
 
   constructor() {
     this.loadProducts();
+    this.loadCategories();
   }
 
   loadProducts() {
@@ -44,6 +52,21 @@ export class Products {
         this.error = 'Failed to load products';
         this.loading = false;
       }
+    });
+  }
+
+  loadCategories() {
+    this.categoriesLoading = true;
+    this.categoriesError = '';
+    this.categoriesService.getAllCategories().subscribe({
+      next: (res) => {
+        this.categories = (res?.data ?? []).filter((c) => !!c?._id);
+        this.categoriesLoading = false;
+      },
+      error: () => {
+        this.categoriesError = 'Failed to load categories';
+        this.categoriesLoading = false;
+      },
     });
   }
 
