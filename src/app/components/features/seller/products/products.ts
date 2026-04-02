@@ -22,6 +22,8 @@ export class Products {
   editingProduct: any = null;
   selectedFile: File | null = null;
   uploading = false;
+  editingSelectedFile: File | null = null;
+  editingUploading = false;
 
   categories: Category[] = [];
   categoriesLoading = false;
@@ -74,6 +76,10 @@ export class Products {
     this.selectedFile = event.target.files[0];
   }
 
+  onEditFileSelected(event: any) {
+    this.editingSelectedFile = event.target.files[0];
+  }
+
   createProduct() {
     if (!this.newProduct.name || !this.newProduct.price || !this.newProduct.categoryId) return;
 
@@ -112,15 +118,45 @@ export class Products {
 
   startEdit(product: any) {
     this.editingProduct = { ...product };
+    if (this.editingProduct?.categoryId && typeof this.editingProduct.categoryId === 'object') {
+      this.editingProduct.categoryId = this.editingProduct.categoryId._id ?? '';
+    }
+    this.editingSelectedFile = null;
   }
 
   updateProduct() {
+    if (!this.editingProduct?._id) return;
+
+    if (this.editingSelectedFile) {
+      this.editingUploading = true;
+      this.sellerService.uploadProductImage(this.editingSelectedFile).subscribe({
+        next: (res: any) => {
+          this.editingProduct.imageUrl = res.data.url;
+          this.submitUpdateProduct();
+        },
+        error: () => {
+          this.editingUploading = false;
+          alert('Failed to upload image');
+        },
+      });
+      return;
+    }
+
+    this.submitUpdateProduct();
+  }
+
+  private submitUpdateProduct() {
     this.sellerService.updateProduct(this.editingProduct._id, this.editingProduct).subscribe({
       next: () => {
         this.editingProduct = null;
+        this.editingSelectedFile = null;
+        this.editingUploading = false;
         this.loadProducts();
       },
-      error: (err: any) => alert('Failed to update product')
+      error: () => {
+        this.editingUploading = false;
+        alert('Failed to update product');
+      },
     });
   }
 

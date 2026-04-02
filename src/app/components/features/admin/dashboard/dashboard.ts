@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnalyticsService, type AdminMainStats, type OrdersDailyRow, type OrdersByStatusRow, type PaymentMethodRow, type RevenueMonthlyRow, type RecentOrderRow, type TopCategoryRow, type TopProductRow, type TopSellerRow } from '../../../../services/analytics';
+import { AdminService } from '../../../../services/admin';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -12,6 +13,7 @@ import { AnalyticsService, type AdminMainStats, type OrdersDailyRow, type Orders
 export class Dashboard implements OnInit {
   private analytics = inject(AnalyticsService);
   private cdr = inject(ChangeDetectorRef);
+  private admin = inject(AdminService);
 
   loading = true;
   error: string | null = null;
@@ -26,6 +28,7 @@ export class Dashboard implements OnInit {
   topSellers: TopSellerRow[] = [];
   recentOrders: RecentOrderRow[] = [];
   pendingApprovals: any[] = [];
+  approvingIds = new Set<string>();
 
   ngOnInit(): void {
     this.loadAll();
@@ -141,7 +144,7 @@ export class Dashboard implements OnInit {
       error: () => markDone(),
     });
 
-    // optional; doesn't block core dashboard
+
     this.analytics.getPendingApprovals().subscribe({
       next: (res) => {
         this.pendingApprovals = res.data || [];
@@ -150,6 +153,43 @@ export class Dashboard implements OnInit {
       error: () => {
         this.pendingApprovals = [];
         this.cdr.detectChanges();
+      },
+    });
+  }
+
+  approve(p: any): void {
+    this.decidePending(p, 'approve');
+  }
+
+  reject(p: any): void {
+    this.decidePending(p, 'reject');
+  }
+
+  private decidePending(p: any, decision: 'approve' | 'reject'): void {
+    const id = String(p?._id || '');
+    if (!id) return;
+
+    const type = String(p?.type || '').toLowerCase();
+    if (type && type !== 'seller') {
+      alert(`Not supported yet: ${p?.type || 'item'}`);
+      return;
+    }
+
+    this.approvingIds.add(id);
+    this.cdr.detectChanges();
+
+    this.admin.decideSellerApplication(id, decision).subscribe({
+      next: () => {
+        this.pendingApprovals = (this.pendingApprovals || []).filter((x) => String(x?._id) !== id);
+        this.approvingIds.delete(id);
+        this.cdr.detectChanges();
+        // Keep dashboard numbers consistent
+        this.refresh();
+      },
+      error: (err: any) => {
+        this.approvingIds.delete(id);
+        this.cdr.detectChanges();
+        alert(this.pickError(err) || `Failed to ${decision}.`);
       },
     });
   }
@@ -187,7 +227,6 @@ export class Dashboard implements OnInit {
     return 'pill pill-pending';
   }
 
-  // Charts helpers (pure SVG)
   barHeights(): number[] {
     const vals = (this.revenueMonthly || []).map((x) => Number(x.revenue || 0));
     const max = Math.max(1, ...vals);

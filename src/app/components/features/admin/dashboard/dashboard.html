@@ -408,8 +408,22 @@
               <div class="mini-sub">{{ p.type }} <span class="mini-dot">•</span> {{ p.seller?.storeName || p.seller?.name || '—' }}</div>
             </div>
             <div class="mini-right">
-              <button class="btn-ghost-siq dash-btn sm" type="button" disabled>Approve</button>
-              <button class="btn-ghost-siq dash-btn sm" type="button" disabled>Reject</button>
+              <button
+                class="btn-ghost-siq dash-btn sm"
+                type="button"
+                (click)="approve(p)"
+                [disabled]="approvingIds.has(p._id)"
+              >
+                @if (approvingIds.has(p._id)) { Working... } @else { Approve }
+              </button>
+              <button
+                class="btn-ghost-siq dash-btn sm"
+                type="button"
+                (click)="reject(p)"
+                [disabled]="approvingIds.has(p._id)"
+              >
+                Reject
+              </button>
             </div>
           </div>
         } @empty {
