@@ -17,13 +17,16 @@ export class Products {
   error = '';
   showForm = false;
   editingProduct: any = null;
+  selectedFile: File | null = null;
+  uploading = false;
 
   newProduct = {
     name: '',
     description: '',
     price: 0,
     stock: 0,
-    categoryId: ''
+    categoryId: '',
+    imageUrl: ''
   };
 
   constructor() {
@@ -44,15 +47,43 @@ export class Products {
     });
   }
 
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+
   createProduct() {
     if (!this.newProduct.name || !this.newProduct.price || !this.newProduct.categoryId) return;
+
+    if (this.selectedFile) {
+      this.uploading = true;
+      this.sellerService.uploadProductImage(this.selectedFile).subscribe({
+        next: (res: any) => {
+          this.newProduct.imageUrl = res.data.url;
+          this.submitProduct();
+        },
+        error: (err: any) => {
+          this.uploading = false;
+          alert('Failed to upload image');
+        }
+      });
+    } else {
+      this.submitProduct();
+    }
+  }
+
+  submitProduct() {
     this.sellerService.createProduct(this.newProduct).subscribe({
       next: () => {
-        this.newProduct = { name: '', description: '', price: 0, stock: 0, categoryId: '' };
+        this.newProduct = { name: '', description: '', price: 0, stock: 0, categoryId: '', imageUrl: '' };
+        this.selectedFile = null;
         this.showForm = false;
+        this.uploading = false;
         this.loadProducts();
       },
-      error: (err: any) => alert('Failed to create product')
+      error: (err: any) => {
+        this.uploading = false;
+        alert('Failed to create product');
+      }
     });
   }
 
