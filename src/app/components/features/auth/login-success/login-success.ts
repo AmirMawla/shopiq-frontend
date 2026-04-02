@@ -29,8 +29,14 @@ export class LoginSuccessComponent implements OnInit {
         this.userProfilePic = userData.profilePicture?.url;
         this.authService.handleAuthSuccess({ token, user: userData });
 
-        // Auto-redirect to home after a brief showing of the success state
-        setTimeout(() => this.navigateToHome(), 2000);
+        const userRole = userData?.role;
+        setTimeout(() => {
+          userRole === 'customer'
+            ? this.navigateToHome()
+            : userRole === 'admin'
+              ? this.navigateToAdmin()
+              : this.navigateToSeller();
+        }, 2000);
       } catch (error) {
         this.router.navigate(['/auth/login']);
       }
@@ -41,5 +47,11 @@ export class LoginSuccessComponent implements OnInit {
 
   navigateToHome() {
     this.router.navigate(['/']);
+  }
+  navigateToAdmin() {
+    this.router.navigate(['/admin']);
+  }
+  navigateToSeller() {
+    this.router.navigate(['/seller']);
   }
 }
