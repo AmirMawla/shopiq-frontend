@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SellerService } from '../../../../services/seller';
 
@@ -7,11 +7,11 @@ import { SellerService } from '../../../../services/seller';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './profile.html',
-  styleUrl: './profile.css'
+  styleUrl: './profile.css',
 })
 export class Profile {
   private sellerService = inject(SellerService);
-
+  private cdr = inject(ChangeDetectorRef);
   profile: any = null;
   loading = true;
   error = '';
@@ -19,7 +19,7 @@ export class Profile {
 
   editData = {
     storeName: '',
-    bio: ''
+    bio: '',
   };
 
   constructor() {
@@ -34,21 +34,23 @@ export class Profile {
         this.editData.storeName = res.data.storeName;
         this.editData.bio = res.data.bio;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.error = 'Failed to load profile';
         this.loading = false;
-      }
+        this.cdr.detectChanges();
+      },
     });
   }
 
   updateProfile() {
     this.sellerService.updateProfile(this.editData).subscribe({
       next: (res: any) => {
-        this.profile = res.data;
         this.editMode = false;
+        this.loadProfile();
       },
-      error: (err: any) => alert('Failed to update profile')
+      error: (err: any) => alert('Failed to update profile'),
     });
   }
 
@@ -58,7 +60,7 @@ export class Profile {
         next: () => {
           alert('Store closed successfully');
         },
-        error: (err: any) => alert('Failed to close store')
+        error: (err: any) => alert('Failed to close store'),
       });
     }
   }

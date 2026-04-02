@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SellerService } from '../../../../services/seller';
 import { CategoriesS } from '../../../../services/category';
@@ -9,12 +9,12 @@ import { Category } from '../../../../models/category';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './products.html',
-  styleUrl: './products.css'
+  styleUrl: './products.css',
 })
 export class Products {
   private sellerService = inject(SellerService);
   private categoriesService = inject(CategoriesS);
-
+  private cdr = inject(ChangeDetectorRef);
   products: any[] = [];
   loading = true;
   error = '';
@@ -35,7 +35,7 @@ export class Products {
     price: 0,
     stock: 0,
     categoryId: '',
-    imageUrl: ''
+    imageUrl: '',
   };
 
   constructor() {
@@ -49,11 +49,13 @@ export class Products {
       next: (res: any) => {
         this.products = res.data;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.error = 'Failed to load products';
         this.loading = false;
-      }
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -85,15 +87,19 @@ export class Products {
 
     if (this.selectedFile) {
       this.uploading = true;
+      this.cdr.detectChanges();
       this.sellerService.uploadProductImage(this.selectedFile).subscribe({
         next: (res: any) => {
           this.newProduct.imageUrl = res.data.url;
+          this.uploading = false;
+          this.cdr.detectChanges();
           this.submitProduct();
         },
         error: (err: any) => {
           this.uploading = false;
+          this.cdr.detectChanges();
           alert('Failed to upload image');
-        }
+        },
       });
     } else {
       this.submitProduct();
@@ -103,7 +109,14 @@ export class Products {
   submitProduct() {
     this.sellerService.createProduct(this.newProduct).subscribe({
       next: () => {
-        this.newProduct = { name: '', description: '', price: 0, stock: 0, categoryId: '', imageUrl: '' };
+        this.newProduct = {
+          name: '',
+          description: '',
+          price: 0,
+          stock: 0,
+          categoryId: '',
+          imageUrl: '',
+        };
         this.selectedFile = null;
         this.showForm = false;
         this.uploading = false;
@@ -111,8 +124,9 @@ export class Products {
       },
       error: (err: any) => {
         this.uploading = false;
+        this.cdr.detectChanges();
         alert('Failed to create product');
-      }
+      },
     });
   }
 
@@ -164,7 +178,7 @@ export class Products {
     if (confirm('Are you sure you want to delete this product?')) {
       this.sellerService.deleteProduct(id).subscribe({
         next: () => this.loadProducts(),
-        error: (err: any) => alert('Failed to delete product')
+        error: (err: any) => alert('Failed to delete product'),
       });
     }
   }
