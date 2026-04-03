@@ -1,59 +1,78 @@
-# ShopiqFrontend
+# ShopIQ — Frontend (Angular)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+Customer-facing **ShopIQ** web app: product browsing, cart, checkout, orders, account, seller and admin areas. Built with **Angular 21** (standalone components), **RxJS**, and **Bootstrap 5** for layout utilities, plus custom ShopIQ styling (`styles.css`, CSS variables).
 
-## Development server
+## Requirements
 
-To start a local development server, run:
+- **Node.js** 18+ (LTS recommended)
+- **npm** (see `packageManager` in `package.json`)
 
-```bash
-ng serve
-```
+## Quick start
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+1. **Install dependencies**
 
-## Code scaffolding
+   ```bash
+   npm install
+   ```
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+2. **API URL**
 
-```bash
-ng generate component component-name
-```
+   The app reads the backend base URL from Angular environments:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+   - `src/environments/environment.development.ts` — default `apiUrl` for local dev (e.g. `http://localhost:1234` or `http://localhost:3000` depending on your API `PORT`)
 
-```bash
-ng generate --help
-```
+   Align `apiUrl` with whatever port your **E_CommerceBack_(Node)** server uses.
 
-## Building
+3. **Run the dev server**
 
-To build the project run:
+   ```bash
+   npm start
+   ```
 
-```bash
-ng build
-```
+   Opens at **http://localhost:4200** (Angular default).
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+4. **Production build**
 
-## Running unit tests
+   ```bash
+   npm run build
+   ```
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+   Output under `dist/shopiq-frontend/`.
 
-```bash
-ng test
-```
+## NPM scripts
 
-## Running end-to-end tests
+| Script | Description |
+|--------|-------------|
+| `npm start` / `ng serve` | Dev server with live reload |
+| `npm run build` | Production build |
+| `npm run watch` | Development build in watch mode |
+| `npm test` | Unit tests (Karma/Vitest per project setup) |
 
-For end-to-end (e2e) testing, run:
+## Project layout (high level)
 
-```bash
-ng e2e
-```
+| Path | Role |
+|------|------|
+| `src/app/app.routes.ts` | Route configuration |
+| `src/app/components/features/customer/` | Shop, product list, product details, cart, orders, etc. |
+| `src/app/components/features/seller/` | Seller dashboard and products |
+| `src/app/components/features/admin/` | Admin dashboard and management |
+| `src/app/components/layouts/` | Customer / seller / admin shells (nav, sidebar) |
+| `src/app/components/shared/` | Shared UI (e.g. navbar, product card) |
+| `src/app/services/` | HTTP services (API, cart, auth, …) |
+| `src/app/guards/` | Route guards (auth, roles) |
+| `src/app/models/` | TypeScript interfaces for API models |
+| `src/environments/` | `apiUrl` and environment flags |
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Backend
 
-## Additional Resources
+This UI expects the **ShopIQ Node API** (sibling folder `E_CommerceBack_(Node)`). CORS must allow the frontend origin (e.g. `http://localhost:4200`). Authenticated calls send `Authorization: Bearer <token>` from `localStorage` where applicable.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Conventions
+
+- **Standalone components** — `imports` in each component.
+- **Signals** used in some shared components (e.g. navbar).
+- Styling uses CSS variables such as `--primary`, `--panel`, `--border` (see `src/styles.css`).
+
+## License
+
+Private / project use unless otherwise specified.
