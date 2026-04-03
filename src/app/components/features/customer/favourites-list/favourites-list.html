@@ -17,34 +17,20 @@
         <button class="btn-siq px-5" routerLink="/products">Start Shopping</button>
     </div>
     } @else {
-    <div class="row g-4">
-        @for(fav of favorites; track fav._id) {
-        <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="fav-custom-card" [routerLink]="['/products', fav.productId?._id]">
-                <div class="fav-card-image">
-                    <img [src]="fav.productId?.imageUrl" [alt]="fav.productId?.name">
-                    <button class="btn-remove-fav" (click)="removeItem(fav.productId?._id, $event)">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 6L6 18M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="fav-card-content">
-                    <p class="fav-category">{{ fav.productId?.categoryId?.name || 'Product' }}</p>
-                    <h4 class="fav-name">{{ fav.productId?.name }}</h4>
-
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="fav-price">${{ fav.productId?.price }}</span>
-                        @if(fav.productId?.stock > 0) {
-                        <span class="text-success-siq" style="font-size: 12px; font-weight: 500;">In Stock</span>
-                        } @else {
-                        <span class="text-danger-siq" style="font-size: 12px; font-weight: 500;">Out of Stock</span>
-                        }
-                    </div>
-                </div>
-            </div>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+        @for (fav of favorites; track fav._id) {
+        @if (fav.productId) {
+        <div class="col d-flex">
+            <app-product-card
+                class="w-100"
+                [product]="asProduct(fav)"
+                [quantity]="cartQty.get(fav.productId._id!) ?? 0"
+                [favorited]="true"
+                (cartUpdated)="syncCart()"
+                (favoriteToggled)="loadFavorites()"
+            />
         </div>
+        }
         }
     </div>
     }

@@ -1,0 +1,254 @@
+:host {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+:host(.w-100) {
+  width: 100%;
+}
+
+.pcard {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pcard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.pcard-media {
+  position: relative;
+  cursor: pointer;
+  background: linear-gradient(180deg, var(--page-bg) 0%, var(--panel) 100%);
+}
+
+.pcard-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.pcard-fav {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 8px;
+  transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.pcard-fav svg {
+  width: 18px;
+  height: 18px;
+}
+
+.pcard-fav:hover {
+  transform: scale(1.06);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.pcard-fav.active {
+  color: var(--danger);
+  border-color: rgba(232, 64, 64, 0.35);
+  background: var(--danger-light);
+}
+
+.pcard-fav.active svg {
+  fill: var(--danger);
+}
+
+.pcard-body {
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.pcard-cat {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.pcard-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.35;
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pcard-title:hover {
+  color: var(--primary);
+}
+
+.pcard-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pcard-stars {
+  display: inline-flex;
+  gap: 1px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.pcard-star {
+  color: var(--border);
+  transition: color 0.15s ease;
+}
+
+.pcard-star.filled {
+  color: #f5a623;
+}
+
+.pcard-rating-num {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pcard-rating-count {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.pcard-rating-count.muted {
+  font-style: italic;
+}
+
+.pcard-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.pcard-price {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+}
+
+.pcard-cart {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.pcart-bag {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--page-bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.pcart-bag svg {
+  width: 20px;
+  height: 20px;
+}
+
+.pcart-bag:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.pcart-stepper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  min-height: 40px;
+  padding: 0 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--page-bg);
+}
+
+.pcart-step {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pcart-step:hover:not(:disabled) {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.pcart-step:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pcart-qty {
+  min-width: 28px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.pcart-qty.zero {
+  color: var(--muted);
+  font-weight: 600;
+}

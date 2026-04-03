@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment.development';
 import { CartModel,RecieptModel } from '../models/cart';
 
@@ -18,6 +19,12 @@ export class CartService {
 
   private httpClient = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/cart`;
+
+  private readonly cartChangedSubject = new Subject<void>();
+  /** Emits when cart contents change (add / update qty / remove / promo / checkout). Navbar and others can refresh. */
+  readonly cartChanged$ = this.cartChangedSubject.asObservable();
+
+  private notifyCartChanged = () => this.cartChangedSubject.next();
 
   constructor() { }
 
@@ -39,15 +46,21 @@ export class CartService {
   }
 
   addItem(productId: string, quantity: number): Observable<APIResponse<CartModel>> {
-    return this.httpClient.post<APIResponse<CartModel>>(`${this.apiUrl}/add-item`, { productId, quantity },{ 'headers': this.headers() })
+    return this.httpClient
+      .post<APIResponse<CartModel>>(`${this.apiUrl}/add-item`, { productId, quantity }, { headers: this.headers() })
+      .pipe(tap(() => this.notifyCartChanged()));
   }
 
   updateQuantity(productId: string, quantity: number): Observable<APIResponse<CartModel>> {
-    return this.httpClient.patch<APIResponse<CartModel>>(`${this.apiUrl}/update-quantity`, { productId, quantity },{ 'headers': this.headers() })
+    return this.httpClient
+      .patch<APIResponse<CartModel>>(`${this.apiUrl}/update-quantity`, { productId, quantity }, { headers: this.headers() })
+      .pipe(tap(() => this.notifyCartChanged()));
   }
 
   removeItem(productId: string): Observable<APIResponse<CartModel>> {
-    return this.httpClient.delete<APIResponse<CartModel>>(`${this.apiUrl}/remove-item`, { body: { productId }, 'headers': this.headers() })
+    return this.httpClient
+      .delete<APIResponse<CartModel>>(`${this.apiUrl}/remove-item`, { body: { productId }, headers: this.headers() })
+      .pipe(tap(() => this.notifyCartChanged()));
   }
 
   isItemInCart(productId: string): Observable<any> {
@@ -59,10 +72,12 @@ export class CartService {
   }
 
   checkout(): Observable<any> {
-    return this.httpClient.post(`${this.apiUrl}/checkout`, {}, { 'headers': this.headers() })
+    return this.httpClient.post(`${this.apiUrl}/checkout`, {}, { headers: this.headers() }).pipe(tap(() => this.notifyCartChanged()));
   }
 
   applyPromoCode(promoCode: string): Observable<APIResponse<CartModel>> {
-    return this.httpClient.post<APIResponse<CartModel>>(`${this.apiUrl}/promocode`, { promoCode },{ 'headers': this.headers() })
+    return this.httpClient
+      .post<APIResponse<CartModel>>(`${this.apiUrl}/promocode`, { promoCode }, { headers: this.headers() })
+      .pipe(tap(() => this.notifyCartChanged()));
   }
 }

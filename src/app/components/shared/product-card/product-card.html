@@ -1,22 +1,90 @@
-<div class="product-card" role="button" tabindex="0">
-  <img
-    class="product-card-img"
-    [src]="product?.imageUrl || 'assets/images/placeholder-product.jpg'"
-    alt="Product"
-  />
-  <div class="product-card-body">
-    <div class="product-card-category">{{ product?.category || 'Category' }}</div>
-    <div class="product-card-name">{{ product?.name || 'Product Name' }}</div>
-    <div>
-      <span class="product-card-price">
-        ${{ product?.price ?? 0 }}
-      </span>
-      @if (
-        product?.oldPrice != null &&
-        (product?.oldPrice ?? 0) > (product?.price ?? 0)
-      ) {
-        <span class="product-card-old-price">${{ product?.oldPrice }}</span>
+<article class="pcard">
+  <div class="pcard-media" (click)="goDetails($event)">
+    <img
+      [src]="product.imageUrl || product.images?.[0]?.url"
+      class="pcard-img"
+      [alt]="product.name"
+      loading="lazy"
+    />
+    <button
+      type="button"
+      class="pcard-fav"
+      [class.active]="favorited"
+      (click)="toggleFavorite($event)"
+      aria-label="Add to favorites"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path
+          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+        ></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="pcard-body">
+    <p class="pcard-cat">{{ categoryLabel }}</p>
+    <h3 class="pcard-title" (click)="goDetails($event)">{{ product.name }}</h3>
+
+    <div class="pcard-rating" [attr.aria-label]="'Rating ' + rating + ' out of 5'">
+      <div class="pcard-stars" aria-hidden="true">
+        @for (s of stars; track s) {
+          <span class="pcard-star" [class.filled]="isStarFilled(s)">★</span>
+        }
+      </div>
+      <span class="pcard-rating-num">{{ rating | number : '1.1-1' }}</span>
+      @if ((product.reviewCount ?? 0) > 0) {
+        <span class="pcard-rating-count">({{ product.reviewCount }})</span>
+      } @else {
+        <span class="pcard-rating-count muted">new</span>
       }
     </div>
+
+    <div class="pcard-row">
+      <span class="pcard-price">${{ product.price }}</span>
+      @if (product.stock === 0) {
+        <span class="pill pill-cancelled">Out of Stock</span>
+      } @else if (product.stock <= 5) {
+        <span class="pill pill-processing">Low stock</span>
+      } @else {
+        <span class="pill pill-active">In stock</span>
+      }
+    </div>
+
+    <div class="pcard-cart" (click)="$event.stopPropagation()">
+      <button
+        type="button"
+        class="pcart-bag"
+        (click)="goCart($event)"
+        title="View cart"
+        aria-label="View shopping cart"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="21" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="18" cy="21" r="1.5" fill="currentColor" stroke="none" />
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.98-1.65L23 6H6" />
+        </svg>
+      </button>
+      <div class="pcart-stepper">
+        <button
+          type="button"
+          class="pcart-step"
+          (click)="dec($event)"
+          [disabled]="cartBusy || quantity <= 0"
+          aria-label="Decrease quantity"
+        >
+          −
+        </button>
+        <span class="pcart-qty" [class.zero]="quantity === 0">{{ quantity }}</span>
+        <button
+          type="button"
+          class="pcart-step"
+          (click)="inc($event)"
+          [disabled]="cartBusy || product.stock <= 0 || quantity >= product.stock"
+          aria-label="Increase quantity"
+        >
+          +
+        </button>
+      </div>
+    </div>
   </div>
-</div>
+</article>

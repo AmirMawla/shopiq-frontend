@@ -18,11 +18,13 @@ import { CategoriesS } from '../../../../services/category';
 import {BannerService} from '../../../../services/banner';
 import { RouterLink } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
+import { CartService } from '../../../../services/cart';
+import { ProductCardComponent } from '../../../shared/product-card/product-card';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, ProductCardComponent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -30,12 +32,14 @@ export class Home implements OnInit {
   private productService = inject(ProductService);
   private categoryService = inject(CategoriesS);
   private bannerService = inject(BannerService);
+  private cartService = inject(CartService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   recentProducts: Product[] = [];
   categories: Category[] = [];
   favoritedIds: Set<string> = new Set();
+  cartQty = new Map<string, number>();
   banners: Banner[] = [ {
     title: 'New Arrivals',
     imageUrl: 'https://placehold.co/1200x400/7C6EF5/ffffff?text=New+Arrivals',
@@ -71,7 +75,10 @@ export class Home implements OnInit {
    ngOnInit(): void {
 
   this.productService.getAllProducts().subscribe({
-    next: (res) => this.recentProducts = res.data.slice(0, 6),
+    next: (res) => {
+      this.recentProducts = res.data.slice(0, 6);
+      this.cdr.detectChanges();
+    },
     error: (err) => console.log(err)
   });
 
@@ -90,7 +97,30 @@ export class Home implements OnInit {
   });
 
   this.loadFavorites();
+  this.syncCart();
    }
+
+  syncCart(): void {
+    this.cartService.getCart().subscribe({
+      next: (res: any) => {
+        const m = new Map<string, number>();
+        const items = res?.cart?.items || [];
+        for (const it of items) {
+          const pid =
+            typeof it.productId === 'object' && it.productId?._id
+              ? String(it.productId._id)
+              : String(it.productId);
+          m.set(pid, Number(it.quantity) || 0);
+        }
+        this.cartQty = m;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cartQty = new Map();
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   loadFavorites(): void {
     const token = localStorage.getItem('token');
@@ -106,26 +136,6 @@ export class Home implements OnInit {
 
   isProductFavorited(id: string): boolean {
     return this.favoritedIds.has(id);
-  }
-
-  toggleFavorite(event: Event, id: string): void {
-    event.stopPropagation();
-    const token = localStorage.getItem('token');
-    if (!token) {
-      this.router.navigateByUrl('/auth/login');
-      return;
-    }
-
-    this.productService.toggleFavorite(id).subscribe({
-      next: (res) => {
-        if (res.data.isFavorited) {
-          this.favoritedIds.add(id);
-        } else {
-          this.favoritedIds.delete(id);
-        }
-        this.cdr.detectChanges();
-      }
-    });
   }
 
   filterByCategory(categoryId: string): void {

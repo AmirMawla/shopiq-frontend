@@ -86,34 +86,15 @@
         <a routerLink="/products" class="section-link">View All →</a>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-        @for(p of recentProducts; track p._id){
-        <div class="product-card" [routerLink]="['/products', p._id]" style="position: relative;">
-
-          <button class="btn-fav-floating" [class.active]="isProductFavorited(p._id!)"
-            (click)="toggleFavorite($event, p._id!)" aria-label="Toggle Favorite">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path
-                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-              </path>
-            </svg>
-          </button>
-
-          <img [src]="p.imageUrl" class="product-card-img" [alt]="p.name">
-          <div class="product-card-body">
-            <p class="product-card-category">{{ $any(p.categoryId)?.name }}</p>
-            <p class="product-card-name">{{ p.name }}</p>
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <span class="product-card-price">${{ p.price }}</span>
-              @if(p.stock == 0){
-              <span class="pill pill-cancelled">Out of Stock</span>
-              } @else if(p.stock <= 5){ <span class="pill pill-processing">Almost Out</span>
-                } @else {
-                <span class="pill pill-active">In Stock</span>
-                }
-            </div>
-          </div>
-        </div>
+      <div class="home-products-grid">
+        @for (p of recentProducts; track p._id) {
+          <app-product-card
+            [product]="p"
+            [quantity]="cartQty.get(p._id!) ?? 0"
+            [favorited]="isProductFavorited(p._id!)"
+            (cartUpdated)="syncCart()"
+            (favoriteToggled)="loadFavorites()"
+          />
         }
       </div>
     </section>

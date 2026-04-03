@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Product, Review } from '../../../../models/product';
 import { ProductService } from '../../../../services/product';
 import { CartService } from '../../../../services/cart';
@@ -9,7 +9,7 @@ import { CartService } from '../../../../services/cart';
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [RouterLink, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
 })
@@ -22,6 +22,8 @@ export class ProductDetails implements OnInit {
 
   isFavorited = false;
   product: Product | null = null;
+  /** Main gallery image (synced with thumbnails when present). */
+  mainImageUrl = '';
   loading = true;
   isInCart = false;
   cartError: string | null = null;
@@ -38,6 +40,8 @@ export class ProductDetails implements OnInit {
     this.apiProductsSErvice.getProductById(id).subscribe({
       next: (res) => {
         this.product = res.data;
+        this.mainImageUrl =
+          this.product.imageUrl || this.product.images?.[0]?.url || '';
         this.loading = false;
         this.cdr.detectChanges();
 
@@ -91,6 +95,39 @@ export class ProductDetails implements OnInit {
 
   goBack(): void {
     this.router.navigateByUrl('/products');
+  }
+
+  get categoryLabel(): string {
+    const c = this.product?.categoryId as { name?: string } | string | undefined;
+    if (c && typeof c === 'object' && 'name' in c && c.name) return c.name;
+    if (typeof c === 'string') return c;
+    return 'Product';
+  }
+
+  galleryUrls(): string[] {
+    if (!this.product) return [];
+    const urls: string[] = [];
+    const add = (u: string | undefined) => {
+      if (u && !urls.includes(u)) urls.push(u);
+    };
+    add(this.product.imageUrl);
+    this.product.images?.forEach((im) => add(im.url));
+    return urls.slice(0, 6);
+  }
+
+  selectGalleryImage(url: string): void {
+    this.mainImageUrl = url;
+  }
+
+  ratingValue(): number {
+    const r = Number(this.product?.averageRating);
+    return Number.isFinite(r) ? Math.min(5, Math.max(0, r)) : 0;
+  }
+
+  stars = [1, 2, 3, 4, 5] as const;
+
+  isStarFilled(i: number): boolean {
+    return i <= Math.round(this.ratingValue());
   }
 
   addToCart(productId: string): void {

@@ -4,21 +4,23 @@ import { Product } from '../../../../models/product';
 import { Category } from '../../../../models/category';
 import { ProductService } from '../../../../services/product';
 import { CategoriesS } from '../../../../services/category';
-import { NgClass } from '@angular/common';
+import { CartService } from '../../../../services/cart';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ProductCardComponent } from '../../../shared/product-card/product-card';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [NgClass, FormsModule],
+  imports: [FormsModule, ProductCardComponent],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
 })
 export class ProductList implements OnInit {
   private productService = inject(ProductService);
   private categoryService = inject(CategoriesS);
+  private cartService = inject(CartService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private activatedRoute = inject(ActivatedRoute);
@@ -26,6 +28,8 @@ export class ProductList implements OnInit {
   products: Product[] = [];
   categories: Category[] = [];
   favoritedIds: Set<string> = new Set();
+  /** productId → qty in cart */
+  cartQty = new Map<string, number>();
   loading = true;
   errorMessage: string | null = null;
 
@@ -37,11 +41,34 @@ export class ProductList implements OnInit {
     this.loadCategories();
     this.loadProducts();
     this.loadFavorites();
+    this.syncCart();
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params['categoryId']) {
         this.selectedCategoryId = params['categoryId'];
         this.filterByCategory(this.selectedCategoryId);
       }
+    });
+  }
+
+  syncCart(): void {
+    this.cartService.getCart().subscribe({
+      next: (res: any) => {
+        const m = new Map<string, number>();
+        const items = res?.cart?.items || [];
+        for (const it of items) {
+          const pid =
+            typeof it.productId === 'object' && it.productId?._id
+              ? String(it.productId._id)
+              : String(it.productId);
+          m.set(pid, Number(it.quantity) || 0);
+        }
+        this.cartQty = m;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cartQty = new Map();
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -59,26 +86,6 @@ export class ProductList implements OnInit {
 
   isProductFavorited(id: string): boolean {
     return this.favoritedIds.has(id);
-  }
-
-  toggleFavorite(event: Event, id: string): void {
-    event.stopPropagation();
-    const token = localStorage.getItem('token');
-    if (!token) {
-      this.router.navigateByUrl('/auth/login');
-      return;
-    }
-
-    this.productService.toggleFavorite(id).subscribe({
-      next: (res) => {
-        if (res.data.isFavorited) {
-          this.favoritedIds.add(id);
-        } else {
-          this.favoritedIds.delete(id);
-        }
-        this.cdr.detectChanges();
-      },
-    });
   }
 
   applyFilters(): void {
@@ -157,9 +164,6 @@ export class ProductList implements OnInit {
     }
   }
 
-  navigateToDetails(id: string): void {
-    this.router.navigateByUrl(`/products/${id}`);
-  }
   filterByPrice(): void {
     if (!this.maxPrice || this.maxPrice <= 0) {
       this.loadProductsRequest(this.productService.getAllProducts());

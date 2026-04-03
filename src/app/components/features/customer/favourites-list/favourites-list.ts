@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Product } from '../../../../models/product';
 import { ProductService } from '../../../../services/product';
+import { CartService } from '../../../../services/cart';
 import { ProductCardComponent } from '../../../shared/product-card/product-card';
 
 @Component({
@@ -9,17 +11,43 @@ import { ProductCardComponent } from '../../../shared/product-card/product-card'
   standalone: true,
   imports: [CommonModule, RouterLink, ProductCardComponent],
   templateUrl: './favourites-list.html',
-  styleUrl: "./favourites-list.css"
+  styleUrl: './favourites-list.css',
 })
 export class FavoritesList implements OnInit {
   private productService = inject(ProductService);
+  private cartService = inject(CartService);
   private cdr = inject(ChangeDetectorRef);
 
   favorites: any[] = [];
+  /** productId → qty in cart */
+  cartQty = new Map<string, number>();
   loading = true;
 
   ngOnInit(): void {
     this.loadFavorites();
+    this.syncCart();
+  }
+
+  syncCart(): void {
+    this.cartService.getCart().subscribe({
+      next: (res: any) => {
+        const m = new Map<string, number>();
+        const items = res?.cart?.items || [];
+        for (const it of items) {
+          const pid =
+            typeof it.productId === 'object' && it.productId?._id
+              ? String(it.productId._id)
+              : String(it.productId);
+          m.set(pid, Number(it.quantity) || 0);
+        }
+        this.cartQty = m;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cartQty = new Map();
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   loadFavorites(): void {
@@ -37,13 +65,7 @@ export class FavoritesList implements OnInit {
     });
   }
 
-  removeItem(productId: string, event: Event): void {
-    event.stopPropagation();
-    this.productService.toggleFavorite(productId).subscribe({
-      next: () => {
-        this.favorites = this.favorites.filter((f) => f.productId?._id !== productId);
-        this.cdr.detectChanges();
-      },
-    });
+  asProduct(fav: any): Product {
+    return fav?.productId as Product;
   }
 }
